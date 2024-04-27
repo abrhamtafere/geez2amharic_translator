@@ -1,9 +1,5 @@
 import { useState } from "react";
 import { BiMenu } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
-import { RiSettings5Fill } from "react-icons/ri";
-import { MdLightMode, MdNotificationsActive } from "react-icons/md";
-import { LuLogOut } from "react-icons/lu";
 import {
   Avatar,
   Tooltip,
@@ -15,10 +11,13 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { setShowSidebar } from '../../redux/slice/translationSlice';
+import { BiUser } from "react-icons/bi";
+import { RiSettings3Line } from "react-icons/ri";
+import { MdDarkMode, MdNotificationsActive } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
+import { setShowSidebar } from "../../redux/slice/translationSlice";
 // eslint-disable-next-line react/prop-types
 const TopBar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const dispatch = useDispatch();
 
@@ -30,78 +29,55 @@ const TopBar = () => {
     setAnchorElUser(null);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-  const settings = ["Your Profile", "Settings", "Dark Mode", "Sign out"];
+  
+  const menus = [
+    {
+      id: 1,
+      name: "Your Profile",
+      link: "/profile",
+      icon: <BiUser />,
+    },
+    {
+      id: 2,
+      name: "Settings",
+      link: "/settings",
+      icon: <RiSettings3Line />,
+    },
+    {
+      id: 3,
+      name: "Dark Mode",
+      link: "/dark-mode",
+      icon: <MdDarkMode />,
+    },
+    {
+      id: 4,
+      name: "Sign out",
+      link: "/sign-out",
+      icon: <FiLogOut />,
+    },
+  ];
+
   return (
     <div className="bg-light-blue-500 text-white p-4 flex justify-between items-center z-20 w-full">
       <div className="md:hidden">
-        <button
-          onClick={() =>
-            dispatch(setShowSidebar())
-          }
-        >
+        <button onClick={() => dispatch(setShowSidebar())}>
           <BiMenu className="w-12 h-12" />
         </button>
       </div>
 
-      <h1 className="text-2xl font-semibold">Dashboards</h1>
+      <h1 className="text-2xl font-semibold hidden md:flex">Dashboards</h1>
 
       <nav className="mr-4 md:mr-8">
+        
         <ul className="flex space-x-2 items-center">
+          <li className='flex gap-4 mr-4'>
+          <a href="/login" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200">Login</a>
+        <a href="/signup" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200">Signup</a>
+          </li>
           <li>
             <a href="#" className="hover:text-gray-300">
               <MdNotificationsActive className="w-5 h-5" />
             </a>
-          </li>
-
-          {/* User Profile Section with Dropdown */}
-          <li>
-            {/* Profile dropdown */}
-            <div className="relative ml-3">
-              {/* Dropdown menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <a
-                    href="/profile"
-                    className="flex gap-2 items-center px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    id="user-menu-item-0"
-                  >
-                    <span>
-                      <CgProfile className="w-5 h-5" />
-                    </span>
-                    <span>Your Profile</span>
-                  </a>
-                  <a
-                    href="/darkmode"
-                    className="flex gap-2 items-center px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    id="user-menu-item-1"
-                  >
-                    <span>
-                      <MdLightMode className="w-5 h-5" />
-                    </span>
-                    Dark Mode
-                  </a>
-                  <a
-                    href="/logout"
-                    className="flex gap-2 items-center px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    tabIndex="-1"
-                    id="user-menu-item-2"
-                  >
-                    <span>
-                      <LuLogOut className="w-5 h-5" />
-                    </span>
-                    <span>Log out</span>
-                  </a>
-                </div>
-              )}
-            </div>
           </li>
           <li>
             <Box sx={{ flexGrow: 0 }}>
@@ -126,13 +102,22 @@ const TopBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                {menus.map((menu) => (
+                  <MenuItem key={menu.id} onClick={handleCloseUserMenu}>
                     <Link
-                      to={`/${setting}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
+                      to={`/${menu.link}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
-                      <Typography textAlign="center">{setting}</Typography>
+                      {menu.icon}
+                      <Typography textAlign="center" className="pl-4">
+                        {menu.name}
+                      </Typography>
                     </Link>
                   </MenuItem>
                 ))}
