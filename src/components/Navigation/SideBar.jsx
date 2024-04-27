@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { FaProjectDiagram, FaUserPlus } from "react-icons/fa";
 import { MdSettings } from "react-icons/md";
-import { RiAdminFill } from "react-icons/ri";
 import { PiSignInBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineMenuOpen } from "react-icons/md";
@@ -23,8 +22,8 @@ const SideBar = () => {
         onClick={() => dispatch(setShowSidebar())}
       >
         <MdOutlineMenuOpen
-          className={`size-8 text-amber-500 shadow-xl ${
-            showSidebar === "left-0" ? "" : "rotate-180"
+          className={`size-8 shadow-xl bg-black/40 hover:bg-black/80 text-white  zrounded-l ${
+            showSidebar === "left-0" ? "rounded-r" : "rotate-180 rounded-l "
           } fixed`}
         />
       </span>
@@ -47,20 +46,6 @@ const SideBar = () => {
               </Link>
             </li>
 
-            <li className={` `}>
-              <Link
-                to="/admins"
-                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/admins"
-                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
-                    : ""
-                }`}
-              >
-                <RiAdminFill className="w-5 h-5" />
-                Users
-              </Link>
-            </li>
-
             <li className={``}>
               <Link
                 to="/projects"
@@ -74,48 +59,20 @@ const SideBar = () => {
                 History
               </Link>
             </li>
-
-            {/* // */}
             <li className={``}>
               <Link
-                to="/projects"
+                to="/settings"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/projects"
+                  currentUrl === "/settings"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
                     : ""
                 }`}
               >
-                <FaProjectDiagram className="w-5 h-5" />
+                <MdSettings className="w-5 h-5" />
                 Home
               </Link>
             </li>
-            <li className={``}>
-              <Link
-                to="/projects"
-                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/projects"
-                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
-                    : ""
-                }`}
-              >
-                <FaProjectDiagram className="w-5 h-5" />
-                About Us
-              </Link>
-            </li>
-            <li className={``}>
-              <Link
-                to="/projects"
-                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/projects"
-                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
-                    : ""
-                }`}
-              >
-                <FaProjectDiagram className="w-5 h-5" />
-                Contact Us
-              </Link>
-            </li>
-            {/*  */}
+
             <li className={``}>
               <Link
                 to="/settings"

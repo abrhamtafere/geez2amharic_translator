@@ -1,8 +1,8 @@
 input[type="checkbox"]:checked + label span {
   transform: translateX(100%);
-  border-color: #3b82f6; /* Or your theme's primary color */
+  border-color: #29292b; /* Or your theme's primary color */
 }
 
 input[type="checkbox"]:checked + label {
-  background-color: #3b82f6; /* Or your theme's primary color */
+  background-color: #29292b; /* Or your theme's primary color */
 }
