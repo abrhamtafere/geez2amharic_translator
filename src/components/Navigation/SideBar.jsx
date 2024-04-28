@@ -1,11 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { FaProjectDiagram, FaUserPlus } from "react-icons/fa";
-import { MdSettings } from "react-icons/md";
+import { MdDarkMode, MdSettings } from "react-icons/md";
 import { PiSignInBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { setShowSidebar } from "../../redux/slice/translationSlice";
+import { FiLogOut } from "react-icons/fi";
+import { BiUser } from "react-icons/bi";
 // import { SiGnuprivacyguard} from 'react-icons/si'
 
 // eslint-disable-next-line react/prop-types
@@ -16,13 +18,13 @@ const SideBar = () => {
 
   const dispatch = useDispatch();
   return (
-    <div className="flex">
+    <div className="flex mt-16">
       <span
         className="bg-white rounded-r-md  z-50"
         onClick={() => dispatch(setShowSidebar())}
       >
         <MdOutlineMenuOpen
-          className={`size-8 shadow-xl bg-black/40 hover:bg-black/80 text-white  zrounded-l ${
+          className={`size-8 shadow-xl bg-black/40 hover:bg-black/80  text-white  zrounded-l ${
             showSidebar === "left-0" ? "rounded-r" : "rotate-180 rounded-l "
           } fixed`}
         />
@@ -45,25 +47,11 @@ const SideBar = () => {
                 Dashboard
               </Link>
             </li>
-
             <li className={``}>
               <Link
-                to="/projects"
+                to="/"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/projects"
-                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
-                    : ""
-                }`}
-              >
-                <FaProjectDiagram className="w-5 h-5" />
-                History
-              </Link>
-            </li>
-            <li className={``}>
-              <Link
-                to="/settings"
-                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/settings"
+                  currentUrl === "/home"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
                     : ""
                 }`}
@@ -72,20 +60,35 @@ const SideBar = () => {
                 Home
               </Link>
             </li>
-
             <li className={``}>
               <Link
-                to="/settings"
+                to="/history"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/settings"
+                  currentUrl === "/history"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
                     : ""
                 }`}
               >
-                <MdSettings className="w-5 h-5" />
-                Settings
+                <FaProjectDiagram className="w-5 h-5" />
+                History
               </Link>
             </li>
+            
+
+            <li className={``}>
+              <Link
+                to="/profile"
+                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
+                  currentUrl === "/profile"
+                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
+                    : ""
+                }`}
+              >
+                <BiUser className="w-5 h-5" />
+                Profile
+              </Link>
+            </li>
+
             <div className="w-full flex items-center mx-2 px-6 py-2 text-gray-400 font-semibold ">
               AUTH PAGES
             </div>
@@ -93,7 +96,7 @@ const SideBar = () => {
               <Link
                 to="/signin"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/signin"
+                  currentUrl === "/login"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
                     : ""
                 }`}
@@ -114,6 +117,32 @@ const SideBar = () => {
               >
                 <FaUserPlus className="w-5 h-5" />
                 Sign Up
+              </Link>
+            </li>
+            <li className={` `}>
+              <Link
+                to="/logout"
+                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
+                  currentUrl === "/logout"
+                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
+                    : ""
+                }`}
+              >
+                <FiLogOut className="w-5 h-5" />
+                Logout
+              </Link>
+            </li>
+            <li className={` `}>
+              <Link
+                to="/dark"
+                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
+                  currentUrl === "/dark"
+                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
+                    : ""
+                }`}
+              >
+                <MdDarkMode className="w-5 h-5" />
+                Dark Mode
               </Link>
             </li>
           </ul>

@@ -1,7 +1,28 @@
 import { Link } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 export const LoginPage = () => {
-  const handleGoogleSignIn = () => {};
+  const handleGoogleSignIn = () => {
+    console.log("Google sign-in triggered");
+  };
+
+  const initialValues = {
+    email: "",
+    password: "",
+    rememberMe: false,
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email format").required("Required"),
+    password: Yup.string().required("Required"),
+  });
+
+  const onSubmit = (values, { setSubmitting }) => {
+    console.log("Form data", values);
+    setSubmitting(false); // Set submitting to false after form is handled
+  };
+
   return (
     <div className="relative min-h-screen bg-gray-100 p-4">
       <div
@@ -31,62 +52,85 @@ export const LoginPage = () => {
           </button>
         </div>
         <div className="p-4 pb-8 mt-6 ">
-          <form className="flex flex-col gap-4  ">
-            <div className="relative h-11 w-full min-w-[200px]">
-              <input
-                type="email"
-                placeholder="Email"
-                className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
-              />
-              <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                Email
-              </label>
-            </div>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            <Form className="flex flex-col gap-4">
+              <div className="relative h-11 w-full min-w-[200px]">
+                <Field
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                />
+                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                  Email
+                </label>
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-xs italic"
+                />
+              </div>
 
-            <div className="relative h-11 w-full min-w-[200px]">
-              <input
-                type="password"
-                placeholder="Password"
-                className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
-              />
-              <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                Password
-              </label>
-            </div>
+              <div className="relative h-11 w-full min-w-[200px]">
+                <Field
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                />
+                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                  Password
+                </label>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-xs italic"
+                />
+              </div>
 
-            <div className="flex items-center mb-4">
-              <input id="remember-me" type="checkbox" className="sr-only" />{" "}
-              {/* Hidden checkbox */}
-              <label
-                htmlFor="remember-me"
-                className="relative flex items-center justify-center cursor-pointer block bg-gray-300 rounded-full w-9 h-4 transition duration-200 ease-in-out"
-              >
-                <span className="absolute left-0 bg-white border-2 border-gray-300 rounded-full w-5 h-5 transition transform duration-100 ease-in-out"></span>
-              </label>
-              <label
-                htmlFor="remember-me"
-                className="ml-3 text-sm text-gray-600 cursor-pointer"
-              >
-                Remember Me
-              </label>
-            </div>
-            <div>
-              <button className="bg-blue-500 w-full hover:bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-2.5 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
-                Sign In
-              </button>
-            </div>
-            <div className="text-center mt-4">
-              <p className="text-gray-500">
-                Don&rsquo;t have an account?{" "}
-                <Link
-                  to="/authentication/signin"
-                  className="text-blue-500 font-medium"
+              <div className="flex items-center mb-4">
+                <Field
+                  type="checkbox"
+                  name="rememberMe"
+                  id="remember-me"
+                  className="sr-only"
+                />{" "}
+                {/* Hidden checkbox */}
+                <label
+                  htmlFor="remember-me"
+                  className="relative flex items-center justify-center cursor-pointer block bg-gray-300 rounded-full w-9 h-4 transition duration-200 ease-in-out"
                 >
-                  Sign Up
-                </Link>
-              </p>
-            </div>
-          </form>
+                  <span className="absolute left-0 bg-white border-2 border-gray-300 rounded-full w-5 h-5 transition transform duration-100 ease-in-out"></span>
+                </label>
+                <label
+                  htmlFor="remember-me"
+                  className="ml-3 text-sm text-gray-600 cursor-pointer"
+                >
+                  Remember Me
+                </label>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="bg-blue-500 w-full hover:bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-2.5 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                >
+                  Sign In
+                </button>
+              </div>
+            </Form>
+          </Formik>
+          <div className="text-center mt-4">
+            <p className="text-gray-500">
+              Don&rsquo;t have an account?{" "}
+              <Link to="/signup" className="text-blue-500 font-medium">
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

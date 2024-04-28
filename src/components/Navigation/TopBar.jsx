@@ -29,24 +29,23 @@ const TopBar = () => {
     setAnchorElUser(null);
   };
 
-  
   const menus = [
     {
       id: 1,
       name: "Your Profile",
-      link: "/profile",
+      link: "profile",
       icon: <BiUser />,
     },
     {
       id: 3,
       name: "Dark Mode",
-      link: "/dark-mode",
+      link: "dark-mode",
       icon: <MdDarkMode />,
     },
     {
       id: 4,
       name: "Sign out",
-      link: "/sign-out",
+      link: "logout",
       icon: <FiLogOut />,
     },
   ];
@@ -62,11 +61,20 @@ const TopBar = () => {
       <h1 className="text-2xl font-semibold hidden md:flex">Dashboards</h1>
 
       <nav className="mr-4 md:mr-8">
-        
         <ul className="flex space-x-2 items-center">
-          <li className='flex gap-4 mr-4'>
-          <a href="/login" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200">Login</a>
-        <a href="/signup" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200">Signup</a>
+          <li className="flex gap-4 mr-4">
+            <a
+              href="/login"
+              className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200"
+            >
+              Login
+            </a>
+            <a
+              href="/signup"
+              className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200"
+            >
+              Signup
+            </a>
           </li>
           {/* <li>
             <a href="#" className="hover:text-gray-300">

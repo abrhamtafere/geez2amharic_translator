@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import TopBar from "./components/Navigation/TopBar";
 import Demo from "./pages/Demo";
@@ -7,12 +7,14 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import SingIn from "./pages/SingIn";
 import Profile from "./components/Profile/Profile";
+import History from "./components/Profile/History";
+import Logout from "./components/Auth/Logout";
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        <TopBar />
+        {/* <TopBar /> */}
         <div className="cflex">
           <SideBar />
           {/* Main content area where routes will render the component */}
@@ -23,6 +25,8 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<SingIn />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/logout" element={<Logout />} />
             </Routes>
           </div>
         </div>
