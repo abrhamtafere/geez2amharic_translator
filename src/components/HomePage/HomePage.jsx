@@ -4,6 +4,7 @@ import { FaAngleDoubleRight } from "react-icons/fa";
 function HomePage() {
   const [geezText, setGeezText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
+  const [file, setFile] = useState(null);
 
   const handleTranslate = () => {
     // Simulate a translation process
@@ -11,8 +12,30 @@ function HomePage() {
     // Here, integrate your actual translation API or logic
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFile(file);
+      // Optionally, you can set up file reading here if needed, e.g., for displaying file content or immediate processing
+      console.log("File uploaded:", file.name);
+      // Additional logic to handle the file upload to a server or file processing can go here
+    }
+  };
+
+  const handleFileUpload = () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+    // Implement the logic to handle file translation here
+    console.log("Prepare to translate file:", file.name);
+    alert("File ready for translation: " + file.name);
+    // Resetting the file state if needed
+    setFile(null);
+  };
+
   return (
-    <div className="flex sitems-center justify-center container mx-auto px-4 min-h-[65vh]">
+    <div className="flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] mb-16">
       <div className="flex flex-col space-y-4 flex-grow gap-6">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8">
           <div className="flex flex-col flex-grow shadow-md">
@@ -60,6 +83,50 @@ function HomePage() {
             Translate
           </button>
         </div>
+
+        {/*  */}
+        <div className="flex justify-between itmes-center bg-light-blue-500 px-2 py-2 text-white rounded-sm text-xl">
+          <span
+            htmlFor=""
+            className=" "
+          >
+            ግዕዝ | Geez
+          </span>
+          <span
+            htmlFor=""
+            className=" "
+          >
+            Translate files
+          </span>
+          <span
+            htmlFor=""
+            className=" "
+          >
+            አማርኛ | Amharic
+          </span>
+        </div>
+        <div className="flex items-center justify-center mb-8">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept=".pdf,.doc,.docx,image/*"
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
+          >
+            Upload File
+          </label>
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
+            onClick={handleFileUpload}
+          >
+            Translate File
+          </button>
+        </div>
+        {/*  */}
       </div>
     </div>
   );

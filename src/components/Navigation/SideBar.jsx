@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { FaProjectDiagram, FaUserPlus } from "react-icons/fa";
@@ -14,11 +15,31 @@ import { BiUser } from "react-icons/bi";
 const SideBar = () => {
   const location = useLocation();
   const currentUrl = location.pathname;
+  const sidebarRef = useRef(null);
   const { showSidebar } = useSelector((state) => state.translation);
 
   const dispatch = useDispatch();
+
+  // Handler to close the sidebar if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        showSidebar === "left-0"
+      ) {
+        dispatch(setShowSidebar()); // This will toggle the sidebar to close
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dispatch, showSidebar]); // Include showSidebar in the dependency array
+
   return (
-    <div className="flex mt-16">
+    <div ref={sidebarRef} className="flex mt-16">
       <span
         className="bg-white rounded-r-md  z-50"
         onClick={() => dispatch(setShowSidebar())}
@@ -73,7 +94,6 @@ const SideBar = () => {
                 History
               </Link>
             </li>
-            
 
             <li className={``}>
               <Link
@@ -94,7 +114,7 @@ const SideBar = () => {
             </div>
             <li className={` `}>
               <Link
-                to="/signin"
+                to="/login"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
                   currentUrl === "/login"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"

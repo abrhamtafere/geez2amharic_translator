@@ -1,22 +1,38 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
+
+import { useAddUserMutation } from "../../redux/api/userApiSlice";
 
 export const Register = () => {
+  const navigate = useNavigate();
+  const [addUser, { isLoading, isError }] = useAddUserMutation();
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (isError) {
+    return <div>Error occured</div>;
+  }
+
   const initialValues = {
-    name: "",
+    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Required"),
-    email: Yup.string().email("Invalid email format").required("Required"),
-    password: Yup.string().required("Required"),
+    full_name: Yup.string().required("Name is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match") // Ensure passwords match
-      .required("Required"),
+      .required("Confirm password is required"),
   });
 
   const onSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -25,6 +41,9 @@ export const Register = () => {
       const { confirmPassword, ...dataToSubmit } = values;
       console.log("Data submitted to the server", dataToSubmit);
       console.log("confirmpassword", confirmPassword);
+
+      const res = await addUser(dataToSubmit);
+      console.log("res: ", res);
       // Simulate an API call
       // const response = await fetch("https://yourapi.com/register", {
       //   method: "POST",
@@ -38,11 +57,12 @@ export const Register = () => {
 
       // const result = await response.json();
       // console.log("Registration successful:", result);
-      alert("Registration successful!");
+      toast.success("Registration successful!");
+      navigate('/login')
       resetForm();
     } catch (error) {
       console.error("Registration failed:", error);
-      alert("Registration failed: " + error.message);
+      toast.error("Registration failed: " + error.message);
       setErrors({ api: "Registration failed. Please try again later." });
     }
     setSubmitting(false);
@@ -58,7 +78,7 @@ export const Register = () => {
       </div>
 
       {/* Form starts overlapping the image */}
-      <div className="max-w-md md:w-[21rem] mx-auto mt-[-5rem] bg-white rounded-lg shadow-lg p-4 relative ">
+      <div className="max-w-md md:w-[22rem] mx-auto mt-[-5rem] bg-white rounded-lg shadow-lg p-4 relative ">
         <div className="flex flex-col items-center justify-center bg-blue-500 p-4 text-center text-white rounded-lg min-h-40 shadow-xl mt-[-50px] ">
           <h4 className="text-2xl font-bold pb-4">Join us today</h4>
           <p className="text-sm">Enter your email and password to register</p>
@@ -70,21 +90,21 @@ export const Register = () => {
             onSubmit={onSubmit}
           >
             {({ isSubmitting }) => (
-              <Form className="flex flex-col gap-4  ">
+              <Form className="flex flex-col gap-8  ">
                 <div className="relative h-11 w-full min-w-[200px]">
                   <Field
-                    name="name"
+                    name="full_name"
                     type="text"
                     placeholder="Name"
                     className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                   />
                   <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                    Name
+                  Full Name
                   </label>
                   <ErrorMessage
                     name="name"
                     component="div"
-                    className="text-red-500 text-xs italic"
+                    className="text-red-500 text-md italic"
                   />
                 </div>
 
@@ -93,15 +113,15 @@ export const Register = () => {
                     name="email"
                     type="email"
                     placeholder="Email"
-                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                   />
-                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                     Email
                   </label>
                   <ErrorMessage
                     name="email"
                     component="div"
-                    className="text-red-500 text-xs italic"
+                    className="text-red-500 text-md italic"
                   />
                 </div>
 
@@ -110,15 +130,15 @@ export const Register = () => {
                     name="password"
                     type="password"
                     placeholder="Password"
-                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                   />
-                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                     Password
                   </label>
                   <ErrorMessage
                     name="password"
                     component="div"
-                    className="text-red-500 text-xs italic"
+                    className="text-red-500 text-md italic"
                   />
                 </div>
 
@@ -127,30 +147,30 @@ export const Register = () => {
                     name="confirmPassword"
                     type="password"
                     placeholder="Confirm Password"
-                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                   />
-                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                     Confirm Password
                   </label>
                   <ErrorMessage
                     name="confirmPassword"
                     component="div"
-                    className="text-red-500 text-xs italic"
+                    className="text-red-500 text-md italic"
                   />
                 </div>
 
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-4 mt-4">
                   <Field
                     type="checkbox"
                     name="agree"
                     className="checkbox checkbox-primary"
                   />
-                  <label className="label pl-2 cursor-pointer text-sm text-gray-600">
+                  <span className="pl-2 cursor-pointer text-sm text-gray-600">
                     I agree to the{" "}
                     <a href="#" className="text-blue-500 font-bold">
                       Terms and Conditions
                     </a>
-                  </label>
+                  </span>
                 </div>
                 <div>
                   <button

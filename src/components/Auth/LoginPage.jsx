@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from "../../redux/api/authApiSlice";
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
   const handleGoogleSignIn = () => {
     console.log("Google sign-in triggered");
   };
@@ -18,9 +28,23 @@ export const LoginPage = () => {
     password: Yup.string().required("Required"),
   });
 
-  const onSubmit = (values, { setSubmitting }) => {
-    console.log("Form data", values);
-    setSubmitting(false); // Set submitting to false after form is handled
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const {rememberMe, ...dataSubmited} = values;
+      // Call the login mutation with form values
+      const result = await login(dataSubmited).unwrap(); // unwrap is used to get the actual data or error
+      console.log("data submitted = ", dataSubmited);
+      // console.log("Login successful", result);
+      toast.success("Successfully Login!");
+      navigate('/');
+      // Handle post-login logic here, such as redirecting the user or storing login data
+    } catch (error) {
+      console.error("Login failed", error);
+      toast.error("Login Failed!");
+      // Optionally handle errors, such as displaying a notification
+    }
+    setSubmitting(false); // Ensure submission flag is reset whether login succeeds or fails
   };
 
   return (
@@ -63,15 +87,15 @@ export const LoginPage = () => {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                 />
-                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                   Email
                 </label>
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="text-red-500 text-xs italic"
+                  className="text-red-500 text-md italic"
                 />
               </div>
 
@@ -80,19 +104,19 @@ export const LoginPage = () => {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                  className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                 />
-                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
                   Password
                 </label>
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="text-red-500 text-xs italic"
+                  className="text-red-500 text-md italic"
                 />
               </div>
 
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4 mt-4">
                 <Field
                   type="checkbox"
                   name="rememberMe"
@@ -108,7 +132,7 @@ export const LoginPage = () => {
                 </label>
                 <label
                   htmlFor="remember-me"
-                  className="ml-3 text-sm text-gray-600 cursor-pointer"
+                  className=" ml-3 text-sm text-gray-600 cursor-pointer"
                 >
                   Remember Me
                 </label>
