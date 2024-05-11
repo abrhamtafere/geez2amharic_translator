@@ -4,19 +4,22 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from "../../redux/api/authApiSlice";
+import { useDispatch } from "react-redux";
+import { setUserCredentials } from "../../redux/slice/authSlice";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
 
   if (isLoading) {
     return <div>Loading</div>;
   }
 
-  const handleGoogleSignIn = () => {
-    console.log("Google sign-in triggered");
-  };
-
+    const handleGoogleSignIn = () => {
+      window.location.href = 'https://geeztoamharic.onrender.com/api/users/google';
+        };
+    
   const initialValues = {
     email: "",
     password: "",
@@ -33,15 +36,23 @@ export const LoginPage = () => {
       // eslint-disable-next-line no-unused-vars
       const {rememberMe, ...dataSubmited} = values;
       // Call the login mutation with form values
-      const result = await login(dataSubmited).unwrap(); // unwrap is used to get the actual data or error
-      console.log("data submitted = ", dataSubmited);
+      const res = await login(dataSubmited).unwrap(); // unwrap is used  to get the actual data or error
+      console.log("data submitted = ", res.token);
+      if (res.token) {
+        console.log('enjoy man: ',res)
+        console.log('name: ', res.user_info.full_name)
+        dispatch(setUserCredentials({ user: res.user_info.full_name, token: res.token }));
+        console.log('Login successful', res);
+      } else {
+        throw new Error(res.message || "Login failed");
+      }
       // console.log("Login successful", result);
       toast.success("Successfully Login!");
       navigate('/');
       // Handle post-login logic here, such as redirecting the user or storing login data
     } catch (error) {
       console.error("Login failed", error);
-      toast.error("Login Failed!");
+      toast.error("Login Failed use the correct crendentials!");
       // Optionally handle errors, such as displaying a notification
     }
     setSubmitting(false); // Ensure submission flag is reset whether login succeeds or fails

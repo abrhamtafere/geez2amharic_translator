@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
-function HomePage() {
+function HomePageAuth() {
   const [geezText, setGeezText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   // const [file, setFile] = useState(null);
-  const user = useSelector((state) => state.auth.user);
 
   const handleTranslate = () => {
     // Simulate a translation process
@@ -18,7 +16,7 @@ function HomePage() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log("File selected:", file);
+      console.log("File selected:", file.name);
       uploadFile(file); // Immediately upload the file after selection
     }
   };
@@ -27,18 +25,15 @@ function HomePage() {
     const formData = new FormData();
     formData.append("file", file);
 
-
     const url = "https://geeztoamharic.onrender.com/api/users/ocr";
 
     try {
       // Use Axios to send a POST request
-      // const response = await axios.post(url, formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
-      console.log('form data is: ', formData)
-      const response = await axios.post(url, file);
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       // Log and handle the response data
       const data = response.data;
@@ -61,14 +56,12 @@ function HomePage() {
   };
 
   return (
-<div className="">
-
     <div className=" flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] mb-16">
       <div className="flex flex-col space-y-4 flex-grow gap-6">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8">
           <div className="flex flex-col flex-grow shadow-md">
             <span className="bg-light-blue-500 px-2 py-2 text-white rounded-sm text-xl">
-              ግዕዝ | Geez 
+              ግዕዝ | Geez
             </span>
 
             <textarea
@@ -112,14 +105,12 @@ function HomePage() {
               className="hidden"
               id="file-upload"
             />
-            {user && (
-              <label
-                htmlFor="file-upload"
-                className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded ml-4"
-              >
-                Upload File
-              </label>
-            )}
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded ml-4"
+            >
+              Upload File
+            </label>
           </div>
           <button
             className=" hidden md:flex bg-light-blue-500 hover:bg-light-blue-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2"
@@ -134,8 +125,7 @@ function HomePage() {
         {/*  */}
       </div>
     </div>
-    </div>
   );
 }
 
-export default HomePage;
+export default HomePageAuth;

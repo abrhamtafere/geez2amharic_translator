@@ -11,6 +11,7 @@ import SingIn from "./pages/SingIn";
 import Profile from "./components/Profile/Profile";
 import History from "./components/Profile/History";
 import Logout from "./components/Auth/Logout";
+import LoginSuccess from "./components/Auth/LoginSuccess";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/login" element={<SingIn />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<History />} />
+              <Route path="/login-success" element={<LoginSuccess />} />
               <Route path="/logout" element={<Logout />} />
             </Routes>
           </div>

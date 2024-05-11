@@ -1,10 +1,18 @@
 import { apiSlice } from "./apiSlice";
 
-export const patientApiSlice = apiSlice.injectEndpoints({
+export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
         url: `users/login`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Login"],
+    }),
+    loginGoogle: builder.mutation({
+      query: (data) => ({
+        url: `users/google`,
         method: "POST",
         body: data,
       }),
@@ -20,4 +28,4 @@ export const patientApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useGetSelfDataQuery } = patientApiSlice;
+export const { useLoginMutation, useGetSelfDataQuery, useLoginGoogleMutation } = authApiSlice;

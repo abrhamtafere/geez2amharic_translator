@@ -81,6 +81,19 @@ export const Register = () => {
       <div className="max-w-md md:w-[22rem] mx-auto mt-[-5rem] bg-white rounded-lg shadow-lg p-4 relative ">
         <div className="flex flex-col items-center justify-center bg-blue-500 p-4 text-center text-white rounded-lg min-h-40 shadow-xl mt-[-50px] ">
           <h4 className="text-2xl font-bold pb-4">Join us today</h4>
+          <button
+            className="flex items-center justify-center bg-white hover:bg-gray-50 rounded-lg shadow px-4 py-2 mt-4 w-full  hover:shadow-lg"
+            // onClick={handleGoogleSignIn} // Implement this function based on your authentication logic
+          >
+            <img
+              src={"/images/google.jpg"}
+              alt="Google logo"
+              className="h-6 mr-3 "
+            />
+            <span className="text-light-blue-700 font-semibold">
+              Sign in with Google
+            </span>
+          </button>
           <p className="text-sm">Enter your email and password to register</p>
         </div>
         <div className="p-4 pb-8 mt-6 ">
