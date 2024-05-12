@@ -25,7 +25,32 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Login"],
     }),
+    uploadFile: builder.mutation({
+      query: (file) => ({
+        url: "users/ocr", // Adjust the endpoint URL according to your server's API
+        method: "POST",
+        body: file,
+        formData: true,
+        // headers: {
+        //   "Content-Type": "multipart/form-data", // Set the content type to multipart/form-data for file upload
+        // },
+      }),
+    }),
+    saveFavorite: builder.mutation({
+      query: (favotite) => ({
+        url: "users/favorite",
+        method: 'POST',
+        body: favotite,
+        formData: true
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetSelfDataQuery, useLoginGoogleMutation } = authApiSlice;
+export const {
+  useLoginMutation,
+  useGetSelfDataQuery,
+  useLoginGoogleMutation,
+  useUploadFileMutation,
+  useSaveFavoriteMutation,
+} = authApiSlice;

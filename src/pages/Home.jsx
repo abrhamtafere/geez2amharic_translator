@@ -44,10 +44,10 @@ const Home = () => {
                   onClick={handleProfile}
                 >
                   <FaUserCog className="text-gray-700" />
-                  <span> Welcome Abrham</span>
+                  <span> Welcome <span className=''>{user}</span></span>
                 </button>
                 <button
-                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
+                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold "
                   onClick={handleLogout}
                 >
                   <MdLogout className="text-gray-700" /> Logout

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from "../../redux/api/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "../../redux/slice/authSlice";
+import { LinearProgress } from "@mui/material";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return <div><LinearProgress /></div>;
   }
 
     const handleGoogleSignIn = () => {

@@ -4,13 +4,14 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 
 import { useAddUserMutation } from "../../redux/api/userApiSlice";
+import { LinearProgress } from "@mui/material";
 
 export const Register = () => {
   const navigate = useNavigate();
   const [addUser, { isLoading, isError }] = useAddUserMutation();
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return <div><LinearProgress /></div>;
   }
 
   if (isError) {
