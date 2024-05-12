@@ -122,7 +122,7 @@ const SideBar = () => {
                 }`}
               >
                 <PiSignInBold className="w-5 h-5" />
-                Sign In
+                Login
               </Link>
             </li>
 
@@ -136,7 +136,7 @@ const SideBar = () => {
                 }`}
               >
                 <FaUserPlus className="w-5 h-5" />
-                Sign Up
+                Register
               </Link>
             </li>
             <li className={` `}>

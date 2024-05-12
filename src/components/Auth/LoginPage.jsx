@@ -42,8 +42,8 @@ export const LoginPage = () => {
         console.log('enjoy man: ',res)
         console.log('name: ', res.user_info.full_name)
         dispatch(setUserCredentials({ user: res.user_info.full_name, token: res.token }));
-        console.log('Login successful', res);
-      } else {
+        console.log('Login successful', res);  
+      } else {  
         throw new Error(res.message || "Login failed");
       }
       // console.log("Login successful", result);

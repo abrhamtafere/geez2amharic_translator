@@ -2,11 +2,12 @@ import { useSelector } from "react-redux";
 import AboutUs from "../components/AboutUs/AboutUs";
 import HomePage from "../components/HomePage/HomePage";
 import { useNavigate } from "react-router-dom";
+import { selectToken } from "../redux/slice/authSlice";
 
 const Home = () => {
   const navigate = useNavigate();
-  // const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.user);
+  const token = useSelector(selectToken);
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     navigate("/logout");
@@ -14,11 +15,14 @@ const Home = () => {
 
   return (
     <div className="bg-gray-100">
-      {
-        user ? <div className="flex pr-4 bg-green-500 w-full justify-end">{user} logout</div>: <div className="flex pr-4 bg-green-500 w-full justify-end">login</div>
-      }
-      
-      
+      {user ? (
+        <div className="flex pr-4 bg-green-500 w-full justify-end">
+          {user} logout  {token}
+        </div>
+      ) : (
+        <div className="flex pr-4 bg-green-500 w-full justify-end">login</div>
+      )}
+
       <div
         className="relative text-center py-16 bg-contain bg-center sm:bg-left lg:bg-bottom"
         style={{ backgroundImage: "url('/Images/geezalphabet.png')" }}
@@ -29,8 +33,9 @@ const Home = () => {
       </div>
       <HomePage />
       <AboutUs />
-      <button className='bg-orange-500' onClick={handleLogout}>logout</button>
-
+      <button className="bg-orange-500" onClick={handleLogout}>
+        logout
+      </button>
     </div>
   );
 };
