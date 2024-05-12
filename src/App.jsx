@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import TopBar from "./components/Navigation/TopBar";
 import Demo from "./pages/Demo";
 import SideBar from "./components/Navigation/SideBar";
@@ -18,21 +18,21 @@ function App() {
     <Router>
       <div className="app-container">
         {/* <TopBar /> */}
-        <div className="cflex">
-          <SideBar />
-          {/* Main content area where routes will render the component */}
-          <div className="content ">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/demo" element={<Demo />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<SingIn />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/login-success" element={<LoginSuccess />} />
-              <Route path="/logout" element={<Logout />} />
-            </Routes>
-          </div>
+        {/* <div className="cflex"> */}
+        <SideBar />
+        {/* Main content area where routes will render the component */}
+        <div className="Xcontent ">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<SingIn />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/login-success" element={<LoginSuccess />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+          {/* </div> */}
         </div>
       </div>
       <ToastContainer />
