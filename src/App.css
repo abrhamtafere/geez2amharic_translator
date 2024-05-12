@@ -1,3 +1,4 @@
+
 input[type="checkbox"]:checked + label span {
   transform: translateX(100%);
   border-color: #29292b; /* Or your theme's primary color */

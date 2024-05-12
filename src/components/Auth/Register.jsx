@@ -69,7 +69,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gray-100 p-4 mt-[-10px]" >
+    <div className="relative min-h-screen bg-gray-100 p-4" >
       <div
         className="h-56 p-8 bg-cover bg-center rounded-md overflow-hidden"
         style={{ backgroundImage: `url("/images/bg-sign-up-cover.jpeg")` }}

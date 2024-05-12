@@ -2,40 +2,88 @@ import { useSelector } from "react-redux";
 import AboutUs from "../components/AboutUs/AboutUs";
 import HomePage from "../components/HomePage/HomePage";
 import { useNavigate } from "react-router-dom";
-import { selectToken } from "../redux/slice/authSlice";
+import { FaUserCog } from "react-icons/fa";
+import { MdLogout } from "react-icons/md";
+import { MdLogin } from "react-icons/md";
+import { GiArchiveRegister } from "react-icons/gi";
+
+// import { selectToken } from "../redux/slice/authSlice";
 
 const Home = () => {
   const navigate = useNavigate();
-  const token = useSelector(selectToken);
+  // const token = useSelector(selectToken);
   const { user } = useSelector((state) => state.auth);
+
+  const handleRegister = () => {
+    navigate("/signup");
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
 
   const handleLogout = () => {
     navigate("/logout");
   };
 
   return (
-    <div className="bg-gray-100">
-      {user ? (
-        <div className="flex pr-4 bg-green-500 w-full justify-end">
-          {user} logout  {token}
+    <div className="relative min-h-screen bg-gray-100">
+      <div className="mb-[-20rem] bg-white rounded-lg shadow-lg relative ">
+        <div className="p-4 pt-8">
+          {/* if user is not login */}
+          {user ? (
+            <div className="text-end pr-6 mb-[-3rem]">
+              <div className="flex justify-end gap-4">
+                <button
+                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
+                  title="go to profile"
+                  onClick={handleProfile}
+                >
+                  <FaUserCog className="text-gray-700" />
+                  <span> Welcome Abrham</span>
+                </button>
+                <button
+                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
+                  onClick={handleLogout}
+                >
+                  <MdLogout className="text-gray-700" /> Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-end pr-6 mb-[-3rem]">
+              <div className="flex justify-end gap-4">
+                <button
+                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
+                  onClick={handleLogin}
+                >
+                  <MdLogin className="text-gray-700" />
+                  Login
+                </button>
+                <button
+                  className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
+                  onClick={handleRegister}
+                >
+                  <GiArchiveRegister className="text-gray-700" />
+                  Register
+                </button>
+              </div>
+            </div>
+          )}
+          <div
+            className="flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md stroke-black mb-8"
+            style={{ backgroundImage: `url("/images/bg-sign-up-cover.jpeg")` }}
+          >
+            Geez to Amharic Translator
+          </div>
         </div>
-      ) : (
-        <div className="flex pr-4 bg-green-500 w-full justify-end">login</div>
-      )}
-
-      <div
-        className="relative text-center py-16 bg-contain bg-center sm:bg-left lg:bg-bottom"
-        style={{ backgroundImage: "url('/Images/geezalphabet.png')" }}
-      >
-        <h1 className="text-2xl font-bold text-light-blue-700 sm:text-xl lg:text-3xl ">
-          Geez to Amharic Translator
-        </h1>
+        <HomePage />
+        <AboutUs />
       </div>
-      <HomePage />
-      <AboutUs />
-      <button className="bg-orange-500" onClick={handleLogout}>
-        logout
-      </button>
     </div>
   );
 };

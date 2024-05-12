@@ -12,16 +12,17 @@ import Profile from "./components/Profile/Profile";
 import History from "./components/Profile/History";
 import Logout from "./components/Auth/Logout";
 import LoginSuccess from "./components/Auth/LoginSuccess";
+import Dashboard from "./components/HomePage/Dashboard";
 
 function App() {
   return (
     <Router>
-      <div className="app-container">
+      {/* <div className="Xapp-container">ooo */}
         {/* <TopBar /> */}
         {/* <div className="cflex"> */}
         <SideBar />
         {/* Main content area where routes will render the component */}
-        <div className="Xcontent ">
+        <div className="Xcontent mt-[-65px]">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/demo" element={<Demo />} />
@@ -29,12 +30,13 @@ function App() {
             <Route path="/login" element={<SingIn />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<History />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login-success" element={<LoginSuccess />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
           {/* </div> */}
         </div>
-      </div>
+      {/* </div> */}
       <ToastContainer />
     </Router>
   );

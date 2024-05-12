@@ -62,8 +62,7 @@ function HomePage() {
 
   return (
 <div className="">
-
-    <div className=" flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] mb-16">
+    <div className=" flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] mb-16 ">
       <div className="flex flex-col space-y-4 flex-grow gap-6">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8">
           <div className="flex flex-col flex-grow shadow-md">
