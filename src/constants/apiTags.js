@@ -5,4 +5,5 @@ export const API_TAGS = {
   ADMIN: "ADMIN",
   LOGIN: "Login",
   EVENT: "Event",
+  FAVORITE: "Favorite",
 };

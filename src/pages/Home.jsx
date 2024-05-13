@@ -32,7 +32,7 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen bg-gray-100">
-      <div className="mb-[-20rem] bg-white rounded-lg shadow-lg relative ">
+      <div className="mb-[-20rem] rounded-lg shadow-lg relative ">
         <div className="p-4 pt-8">
           {/* if user is not login */}
           {user ? (
@@ -75,7 +75,7 @@ const Home = () => {
             </div>
           )}
           <div
-            className="flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md stroke-black mb-8"
+            className="flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md stroke-black mb-8 bg-gray-100"
             style={{ backgroundImage: `url("/images/bg-sign-up-cover.jpeg")` }}
           >
             Geez to Amharic Translator

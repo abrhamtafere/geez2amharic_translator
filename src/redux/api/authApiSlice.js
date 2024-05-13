@@ -39,10 +39,26 @@ export const authApiSlice = apiSlice.injectEndpoints({
     saveFavorite: builder.mutation({
       query: (favotite) => ({
         url: "users/favorite",
-        method: 'POST',
+        method: "POST",
         body: favotite,
-        formData: true
+        formData: true,
       }),
+      invalidatesTags: ["Favorite"],
+    }),
+    getFavorites: builder.query({
+      query: (id) => ({
+        url: `users/favorite/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Favorite"],
+    }), //users/favorite
+    deleteFavorite: builder.mutation({
+      query: (data) => ({
+        url: `users/favorite`,
+        method: "DELETE",
+        body: data,
+      }),
+      invalidatesTags: ["Favorite"],
     }),
   }),
 });
@@ -50,7 +66,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
 export const {
   useLoginMutation,
   useGetSelfDataQuery,
+  useGetFavoritesQuery,
   useLoginGoogleMutation,
   useUploadFileMutation,
   useSaveFavoriteMutation,
+  useDeleteFavoriteMutation,
 } = authApiSlice;

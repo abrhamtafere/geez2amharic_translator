@@ -22,7 +22,7 @@ function App() {
         {/* <div className="cflex"> */}
         <SideBar />
         {/* Main content area where routes will render the component */}
-        <div className="Xcontent mt-[-65px]">
+        <div className="Xcontent mt-[-65px] bg-gray-100">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/demo" element={<Demo />} />

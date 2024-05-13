@@ -42,7 +42,7 @@ export const LoginPage = () => {
       if (res.token) {
         console.log('enjoy man: ',res)
         console.log('name: ', res.user_info.full_name)
-        dispatch(setUserCredentials({ user: res.user_info.full_name, token: res.token }));
+        dispatch(setUserCredentials({ user: res.user_info.full_name, user_id: res.user_info.user_id, token: res.token }));
         console.log('Login successful', res);  
       } else {  
         throw new Error(res.message || "Login failed");

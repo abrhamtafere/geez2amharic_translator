@@ -10,8 +10,8 @@ import { setShowSidebar } from "../../redux/slice/translationSlice";
 import { FiLogOut } from "react-icons/fi";
 import { BiUser } from "react-icons/bi";
 import { selectUser } from "../../redux/slice/authSlice";
-import { FaHistory } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 // import { SiGnuprivacyguard} from 'react-icons/si'
 
 // eslint-disable-next-line react/prop-types
@@ -95,8 +95,8 @@ const SideBar = () => {
                       : ""
                   }`}
                 >
-                  <FaHistory className="w-5 h-5" />
-                  History
+                  <MdFavorite className="w-5 h-5" />
+                  Favorites
                 </Link>
               </li>
             )}

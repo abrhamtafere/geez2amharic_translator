@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function Profile() {
+  const { user } = useSelector((state) => state.auth);
   const [profile, setProfile] = useState({
-    name: "John Doe",
+    name: user || "John Doe",
     email: "john.doe@example.com",
     password: "********", // Display placeholder for password
   });
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

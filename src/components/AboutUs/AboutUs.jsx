@@ -2,7 +2,7 @@
 
 function AboutUs() {
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 ">
       <div className="flex flex-col md:flex-row gap-6">
       <div className="">
 
