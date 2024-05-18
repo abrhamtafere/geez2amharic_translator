@@ -99,7 +99,7 @@ function HomePage() {
 
   return (
     <div className="bg-gray-100">
-      <div className=" flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] mb-16">
+      <div className=" flex sitems-center justify-center container mx-auto px-4 min-h-[65vh] ">
         <div className="flex flex-col space-y-4 flex-grow gap-6">
           <div className="flex flex-col md:flex-row gap-4 md:gap-8">
             <div className="flex flex-col flex-grow shadow-md">
@@ -127,10 +127,14 @@ function HomePage() {
             </button>
             <div className="flex flex-col gap-2">
               <FaAngleDoubleRight className="hidden md:flex text-blue-700 size-6" />
-              {favoriteState ? (
-                <FaHeart className="hidden md:flex text-green-700 size-6" />
-              ) : (
-                <FaRegHeart className="hidden md:flex text-red-700 size-6" />
+              {user && (
+                <div className="">
+                  {favoriteState ? (
+                    <FaHeart className="hidden md:flex text-green-700 size-6" />
+                  ) : (
+                    <FaRegHeart className="hidden md:flex text-red-700 size-6" />
+                  )}
+                </div>
               )}
             </div>
             <div className="flex flex-col flex-grow shadow-md">
@@ -175,12 +179,14 @@ function HomePage() {
               Translate
             </button>
             {/* favotites */}
-            <button
-              className="hidden md:flex bg-green-500 hover:bg-green-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2 ml-4"
-              onClick={saveFavoriteTranslation}
-            >
-              Save Favorite
-            </button>
+            {user && (
+              <button
+                className="hidden md:flex bg-green-500 hover:bg-green-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2 ml-4"
+                onClick={saveFavoriteTranslation}
+              >
+                Save Favorite
+              </button>
+            )}
           </div>
         </div>
       </div>

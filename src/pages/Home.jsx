@@ -6,6 +6,7 @@ import { FaUserCog } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { MdLogin } from "react-icons/md";
 import { GiArchiveRegister } from "react-icons/gi";
+import UnregisteredUserMessage from "../components/HomePage/UnregisteredUserMessage";
 
 // import { selectToken } from "../redux/slice/authSlice";
 
@@ -82,6 +83,7 @@ const Home = () => {
           </div>
         </div>
         <HomePage />
+        <UnregisteredUserMessage />
         <AboutUs />
       </div>
     </div>

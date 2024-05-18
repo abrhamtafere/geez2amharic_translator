@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { FaUserPlus } from "react-icons/fa";
 import { MdDarkMode } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
 import { PiSignInBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineMenuOpen } from "react-icons/md";
@@ -23,6 +24,17 @@ const SideBar = () => {
   const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
+
+  // dark mode functionality
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   // Handler to close the sidebar if clicking outside of it
   useEffect(() => {
@@ -58,20 +70,22 @@ const SideBar = () => {
         className={`h-screen fixed xmd:left-0 ${showSidebar} flex-row flex-nowrap  Xshadow-xl w-64 z-10 py-2 px-2 pr-1 transition-all duration-300 Xoverflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400/80 scrollbar-track-gray-100 `}
       >
         <div className="flex bg-gray-800 text-white min-h-[84vh] xmd:h-[86vh] rounded-xl mb-16">
-          <ul className="py-4 w-full">
-            <li className={``}>
-              <Link
-                to="/dashboard"
-                className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
-                  currentUrl === "/dashboard"
-                    ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
-                    : ""
-                }`}
-              >
-                <MdDashboard className="w-5 h-5" />
-                Dashboard
-              </Link>
-            </li>
+          <ul className="flex flex-col kjustify-center  py-4 w-full">
+            {user && (
+              <li className={``}>
+                <Link
+                  to="/dashboard"
+                  className={`flex items-center gap-4  font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4 px-4 py-3 rounded-lg mx-2 ${
+                    currentUrl === "/dashboard"
+                      ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
+                      : ""
+                  }`}
+                >
+                  <MdDashboard className="w-5 h-5" />
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li className={``}>
               <Link
                 to="/"
@@ -167,17 +181,20 @@ const SideBar = () => {
               </li>
             )}
 
-            <li className={` `}>
+            <li className={` hidden`}>
               <Link
-                to="/dark"
+                onClick={() => setDarkMode(!darkMode)}
+                // to="/dark"
                 className={`flex items-center gap-4   font-semi-bold hover:bg-gray-700 py-2 px-4 cursor-pointer mb-4  px-4 py-3 rounded-lg mx-2 ${
                   currentUrl === "/dark"
                     ? "bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white hover:shadow-sm hover:shadow-blue-200"
                     : ""
                 }`}
               >
-                <MdDarkMode className="w-5 h-5" />
-                Dark Mode
+                {darkMode ? <MdLightMode className="w-5 h-5" />:
+                <MdDarkMode className="w-5 h-5" />}
+                {darkMode ? "Light Mode" : "Dark Mode"}
+                {/* Dark Mode */}
               </Link>
             </li>
           </ul>

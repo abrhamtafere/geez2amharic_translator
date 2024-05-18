@@ -2,11 +2,14 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/api/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "../../redux/slice/authSlice";
 import { LinearProgress } from "@mui/material";
+// for google auth
+import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from "@react-oauth/google";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -14,13 +17,48 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
 
   if (isLoading) {
-    return <div><LinearProgress /></div>;
+    return (
+      <div>
+        <LinearProgress />
+      </div>
+    );
   }
 
-    const handleGoogleSignIn = () => {
-      window.location.href = 'https://geeztoamharic.onrender.com/api/users/google';
-        };
-    
+  //now try
+  const handleSuccess = (response) => {
+    console.log("Login Success=>:", response);
+    const { credential } = response;
+
+    // Decode the token to get user information
+    const user = jwtDecode(credential);
+    console.log("User:", user);
+
+    // Access token and user info
+    const token = credential;
+    const username = user.name;
+    const email = user.email;
+
+    console.log("Token:", token);
+    console.log("Username:", username);
+    console.log("Email:", email);
+
+    //set creadentials
+    dispatch(
+      setUserCredentials({
+        user: username,
+        user_id: email,
+        token: token,
+      })
+    );
+    toast.success("Successfully Login!");
+    navigate("/");
+  };
+
+  const handleFailure = () => {
+    console.log("Login Failed");
+    toast.error("Login Failed");
+  };
+
   const initialValues = {
     email: "",
     password: "",
@@ -35,21 +73,27 @@ export const LoginPage = () => {
   const onSubmit = async (values, { setSubmitting }) => {
     try {
       // eslint-disable-next-line no-unused-vars
-      const {rememberMe, ...dataSubmited} = values;
+      const { rememberMe, ...dataSubmited } = values;
       // Call the login mutation with form values
       const res = await login(dataSubmited).unwrap(); // unwrap is used  to get the actual data or error
       console.log("data submitted = ", res.token);
       if (res.token) {
-        console.log('enjoy man: ',res)
-        console.log('name: ', res.user_info.full_name)
-        dispatch(setUserCredentials({ user: res.user_info.full_name, user_id: res.user_info.user_id, token: res.token }));
-        console.log('Login successful', res);  
-      } else {  
+        console.log("enjoy man: ", res);
+        console.log("name: ", res.user_info.full_name);
+        dispatch(
+          setUserCredentials({
+            user: res.user_info.full_name,
+            user_id: res.user_info.user_id,
+            token: res.token,
+          })
+        );
+        console.log("Login successful", res);
+      } else {
         throw new Error(res.message || "Login failed");
       }
       // console.log("Login successful", result);
       toast.success("Successfully Login!");
-      navigate('/');
+      navigate("/");
       // Handle post-login logic here, such as redirecting the user or storing login data
     } catch (error) {
       console.error("Login failed", error);
@@ -72,20 +116,19 @@ export const LoginPage = () => {
       <div className="max-w-md md:w-[21rem] mx-auto mt-[-5rem] bg-white rounded-lg shadow-lg p-4 relative ">
         <div className="flex flex-col items-center justify-center bg-blue-500 p-4 text-center text-white rounded-lg min-h-40 shadow-xl mt-[-50px]">
           <h4 className="text-2xl font-bold pb-4">Sign In</h4>
-
-          <button
-            className="flex items-center justify-center bg-white hover:bg-gray-50 rounded-lg shadow px-4 py-2 mt-4 w-full  hover:shadow-lg"
-            onClick={handleGoogleSignIn} // Implement this function based on your authentication logic
-          >
-            <img
-              src={"/images/google.jpg"}
-              alt="Google logo"
-              className="h-6 mr-3 "
-            />
-            <span className="text-light-blue-700 font-semibold">
-              Sign in with Google
-            </span>
-          </button>
+          <GoogleLogin
+            onSuccess={handleSuccess}
+            onFailure={handleFailure}
+            render={(renderProps) => (
+              <button
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full border-8"
+              >
+                Sign in with Google
+              </button>
+            )}
+          />
         </div>
         <div className="p-4 pb-8 mt-6 ">
           <Formik
