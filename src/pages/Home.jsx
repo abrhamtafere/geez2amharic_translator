@@ -41,7 +41,7 @@ const Home = () => {
               <div className="flex justify-end gap-4">
                 <button
                   className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
-                  title="go to profile"
+                  // title="go to profile"
                   onClick={handleProfile}
                 >
                   <FaUserCog className="text-gray-700" />

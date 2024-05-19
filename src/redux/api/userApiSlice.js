@@ -45,7 +45,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `users/delete/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["ADMIN"],
+      invalidatesTags: ["Login"],
     }),
   }),
 });

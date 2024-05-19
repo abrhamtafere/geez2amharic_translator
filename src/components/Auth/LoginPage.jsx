@@ -31,17 +31,12 @@ export const LoginPage = () => {
 
     // Decode the token to get user information
     const user = jwtDecode(credential);
-    console.log("User:", user);
+    // console.log("User:", user);
 
     // Access token and user info
     const token = credential;
     const username = user.name;
     const email = user.email;
-
-    console.log("Token:", token);
-    console.log("Username:", username);
-    console.log("Email:", email);
-
     //set creadentials
     dispatch(
       setUserCredentials({
@@ -49,7 +44,7 @@ export const LoginPage = () => {
         user_id: email,
         token: token,
       })
-    );
+    ); 
     toast.success("Successfully Login!");
     navigate("/");
   };

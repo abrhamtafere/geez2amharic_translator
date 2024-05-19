@@ -1,14 +1,49 @@
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useDeleteUserMutation } from "../../redux/api/userApiSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  const { user } = useSelector((state) => state.auth);
+  const { user, user_id } = useSelector((state) => state.auth);
+  const [deleteUser, { isLoading }] = useDeleteUserMutation();
+  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   const [profile, setProfile] = useState({
     name: user || "John Doe",
     email: "john.doe@example.com",
     password: "********", // Display placeholder for password
   });
 
+  const handleDeleteUser = async (userId) => {
+    try {
+      console.log("id: ", user_id, userId);
+      const res = await deleteUser(user_id).unwrap();
+      console.log("User deleted successfully", res);
+      toast.success("User deleted successfully");
+      navigate("/logout");
+      handleCloseModal();
+    } catch (err) {
+      console.error("Failed to delete the user: ", err);
+      toast.error("Failed to delete the user");
+      handleCloseModal();
+    }
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,18 +57,6 @@ function Profile() {
     // API call to update the profile would go here
     console.log("Profile updated:", profile);
     alert("Profile updated successfully!");
-  };
-
-  const handleDeleteAccount = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    ) {
-      // API call to delete the account would go here
-      console.log("Account deleted");
-      alert("Account deleted successfully!");
-    }
   };
 
   return (
@@ -75,12 +98,32 @@ function Profile() {
           </button>
           <button
             className="btn btn-error text-white  bg-red-500 hover:bg-red-600 p-2 rounded"
-            onClick={handleDeleteAccount}
+            onClick={handleOpenModal}
+            disabled={isLoading}
           >
-            Delete Account
+            {isLoading ? "Deleting Account ..." : "Delete Account"}
           </button>
         </div>
       </div>
+
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this favorite?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleDeleteUser(user_id)}
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
