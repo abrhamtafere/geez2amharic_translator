@@ -18,24 +18,24 @@ function App() {
   return (
     <Router>
       {/* <div className="Xapp-container">ooo */}
-        {/* <TopBar /> */}
-        {/* <div className="cflex"> */}
-        <SideBar />
-        {/* Main content area where routes will render the component */}
-        <div className="Xcontent mt-[-65px] bg-gray-100">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<SingIn />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login-success" element={<LoginSuccess />} />
-            <Route path="/logout" element={<Logout />} />
-          </Routes>
-          {/* </div> */}
-        </div>
+      {/* <TopBar /> */}
+      {/* <div className="cflex"> */}
+      <SideBar />
+      {/* Main content area where routes will render the component */}
+      <div className="Xcontent mt-[-65px] bg-gray-100">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/demo" element={<Demo />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<SingIn />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login-success" element={<LoginSuccess />} />
+          <Route path="/logout" element={<Logout />} />
+        </Routes>
+        {/* </div> */}
+      </div>
       {/* </div> */}
       <ToastContainer />
     </Router>
