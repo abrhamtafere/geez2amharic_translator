@@ -37,7 +37,7 @@ const Home = () => {
         <div className="p-4 pt-8">
           {/* if user is not login */}
           {user ? (
-            <div className="text-end pr-6 mb-[-3rem]">
+            <div className="text-end pr-6 mb-[-3rem] z-20 relative">
               <div className="flex justify-end gap-4">
                 <button
                   className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
@@ -56,7 +56,7 @@ const Home = () => {
               </div>
             </div>
           ) : (
-            <div className="text-end pr-6 mb-[-3rem]">
+            <div className="text-end pr-6 mb-[-3rem] z-40 relative">
               <div className="flex justify-end gap-4">
                 <button
                   className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold"
@@ -76,11 +76,14 @@ const Home = () => {
             </div>
           )}
           <div
-            className="flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md stroke-black mb-8 bg-gray-100"
-            style={{ backgroundImage: `url("/images/bg-sign-up-cover.jpeg")` }}
-          >
-            Geez to Amharic Translator
-          </div>
+  className="relative flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md mb-8"
+  style={{ backgroundImage: `url("/images/geez.webp")` }}
+>
+  <div className="absolute inset-0 bg-black opacity-50"></div>
+  <div className="relative z-10">
+    Geez to Amharic Translator
+  </div>
+</div>
         </div>
         <HomePage />
         <UnregisteredUserMessage />

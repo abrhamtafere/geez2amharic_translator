@@ -101,9 +101,10 @@ export const LoginPage = () => {
   return (
     <div className="relative min-h-screen bg-gray-100 p-4">
       <div
-        className="h-56 p-8 bg-cover bg-center rounded-md overflow-hidden"
-        style={{ backgroundImage: `url("/images/bg-sign-up-cover.jpeg")` }}
+        className="relative h-56 p-8 bg-cover bg-center rounded-md overflow-hidden"
+        style={{ backgroundImage: `url("/images/geez.webp")` }}
       >
+        <div className="absolute inset-0 bg-black opacity-50"></div>
         {/* Image fills this div */}
       </div>
 
