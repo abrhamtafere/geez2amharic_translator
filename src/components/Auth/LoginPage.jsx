@@ -36,12 +36,13 @@ export const LoginPage = () => {
     // Access token and user info
     const token = credential;
     const username = user.name;
-    const email = user.email;
+    // const email = user.email;
+    const user_id = user.sub; // an id from google 
     //set creadentials
     dispatch(
       setUserCredentials({
         user: username,
-        user_id: email,
+        user_id: user_id,
         token: token,
       })
     ); 
