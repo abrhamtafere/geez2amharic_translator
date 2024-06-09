@@ -44,7 +44,7 @@ function HomePage() {
     return <div>Error uploading file</div>;
   }
 
-  const translateSentence = async (sentence) => {
+  const translateSentence = async (paragraph) => {
     try {
       setLoadingTranslate(true);
       const response = await fetch("http://127.0.0.1:5000/translate", {
@@ -52,7 +52,7 @@ function HomePage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sentence: sentence }),
+        body: JSON.stringify({ paragraph: paragraph }),
       });
 
       if (!response.ok) {

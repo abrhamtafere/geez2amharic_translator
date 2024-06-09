@@ -10,10 +10,12 @@ import { LinearProgress } from "@mui/material";
 // for google auth
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
+import { useAddUserMutation } from "../../redux/api/userApiSlice";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
+  const [addUser, { isAddLoading, isError }] = useAddUserMutation();
   const dispatch = useDispatch();
 
   if (isLoading) {
@@ -25,7 +27,7 @@ export const LoginPage = () => {
   }
 
   //now try
-  const handleSuccess = (response) => {
+  const handleSuccess = async (response) => {
     console.log("Login Success=>:", response);
     const { credential } = response;
 
@@ -36,8 +38,8 @@ export const LoginPage = () => {
     // Access token and user info
     const token = credential;
     const username = user.name;
-    // const email = user.email;
-    const user_id = user.sub; // an id from google 
+    const email = user.email;
+    const user_id = user.sub; // an id from google
     //set creadentials
     dispatch(
       setUserCredentials({
@@ -45,7 +47,14 @@ export const LoginPage = () => {
         user_id: user_id,
         token: token,
       })
-    ); 
+    );
+
+    // Register the user in the backend
+    // await addUser({
+    //   full_name: username,
+    //   email: email,
+    //   password: "1234",
+    // }).unwrap();
     toast.success("Successfully Login!");
     navigate("/");
   };

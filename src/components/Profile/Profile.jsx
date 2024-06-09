@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useDeleteUserMutation } from "../../redux/api/userApiSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+// accept user info and 
 function Profile() {
   const { user, user_id } = useSelector((state) => state.auth);
   const [deleteUser, { isLoading }] = useDeleteUserMutation();
