@@ -42,9 +42,36 @@ function HomePage() {
   if (isError) {
     return <div>Error uploading file</div>;
   }
-  const handleTranslate = () => {
+
+  const translateSentence = async (sentence) => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ sentence: sentence }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const data = await response.json();
+        return data.translation;  // Adjusted based on Postman response
+    } catch (error) {
+        console.error('Error:', error);
+        return 'Translation failed';
+    }
+};
+
+  const handleTranslate = async () => {
     // Simulate a translation process
-    setTranslatedText("Translated version of: " + geezText);
+    if(geezText) {
+      const translation = await translateSentence(geezText);
+      setTranslatedText(translation);
+      // setTranslatedText("Translated version of: " + geezText);
+    }
     // Here, integrate your actual translation API or logic
   };
 

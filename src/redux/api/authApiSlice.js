@@ -60,6 +60,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Favorite"],
     }),
+    translate: builder.mutation({
+      query: (data) => ({
+        url: `users/favorite`,
+        method: "DELETE",
+        body: data,
+      }),
+      invalidatesTags: ["Favorite"],
+    }),
   }),
 });
 
