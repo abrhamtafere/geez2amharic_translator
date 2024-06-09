@@ -16,6 +16,7 @@ function HomePage() {
   const [translatedText, setTranslatedText] = useState("");
   const { user, user_id } = useSelector((state) => state.auth);
   const [favoriteState, setFavoriteState] = useState(false);
+  const [loadingTranslate, setLoadingTranslate] = useState(false);
   const [uploadFile, { isLoading, isError }] = useUploadFileMutation();
   const [saveFavorite, { isFavoriteLoading, isFavoriteError }] =
     useSaveFavoriteMutation();
@@ -45,32 +46,37 @@ function HomePage() {
 
   const translateSentence = async (sentence) => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/translate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ sentence: sentence }),
-        });
+      setLoadingTranslate(true);
+      const response = await fetch("http://127.0.0.1:5000/translate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sentence: sentence }),
+      });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
 
-        const data = await response.json();
-        return data.translation;  // Adjusted based on Postman response
+      const data = await response.json();
+      return data.translation; // Adjusted based on Postman response
     } catch (error) {
-        console.error('Error:', error);
-        return 'Translation failed';
+      console.error("Error:", error);
+      return "Translation failed";
+    } finally {
+      setLoadingTranslate(false);
     }
-};
+  };
 
   const handleTranslate = async () => {
     // Simulate a translation process
-    if(geezText) {
+    if (geezText) {
       const translation = await translateSentence(geezText);
       setTranslatedText(translation);
       // setTranslatedText("Translated version of: " + geezText);
+    } else {
+      setTranslatedText("please first enter the geez text");
     }
     // Here, integrate your actual translation API or logic
   };
@@ -202,6 +208,7 @@ function HomePage() {
             <button
               className=" hidden md:flex bg-light-blue-500 hover:bg-light-blue-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2"
               onClick={handleTranslate}
+              disabled={loadingTranslate}
             >
               Translate
             </button>
