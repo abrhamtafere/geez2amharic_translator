@@ -47,7 +47,7 @@ function HomePage() {
   const translateSentence = async (paragraph) => {
     try {
       setLoadingTranslate(true);
-      const response = await fetch("http://127.0.0.1:5000/translate", {
+      const response = await fetch("https://geeztoamharic.loca.lt/translate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,9 +64,10 @@ function HomePage() {
     } catch (error) {
       console.error("Error:", error);
       return "Translation failed";
-    } finally {
-      setLoadingTranslate(false);
     }
+    // finally {
+    //   // setLoadingTranslate(false);
+    // }
   };
 
   const handleTranslate = async () => {
@@ -78,6 +79,7 @@ function HomePage() {
     } else {
       setTranslatedText("please first enter the geez text");
     }
+    setLoadingTranslate(false);
     // Here, integrate your actual translation API or logic
   };
 
@@ -206,7 +208,11 @@ function HomePage() {
               )}
             </div>
             <button
-              className=" hidden md:flex bg-light-blue-500 hover:bg-light-blue-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2"
+              className={` hidden md:flex text-white text-xl font-bold py-2 px-8 rounded sw-1/2 ${
+                loadingTranslate
+                  ? "bg-gray-500 hover:bg-gray-500"
+                  : "bg-light-blue-500 hover:bg-light-blue-700"
+              }`}
               onClick={handleTranslate}
               disabled={loadingTranslate}
             >
