@@ -1,24 +1,37 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/api/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "../../redux/slice/authSlice";
-import { LinearProgress } from "@mui/material";
+import {
+  LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  IconButton,
+} from "@mui/material";
 // for google auth
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAddUserMutation } from "../../redux/api/userApiSlice";
+import { BiShow, BiHide } from "react-icons/bi";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
-  const [addUser, { isAddLoading, isError }] = useAddUserMutation();
+  const [addUser, { isLoading: isAddLoading }] = useAddUserMutation();
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [googleUser, setGoogleUser] = useState(null);
 
-  if (isLoading) {
+  if (isLoading || isAddLoading) {
     return (
       <div>
         <LinearProgress />
@@ -26,42 +39,75 @@ export const LoginPage = () => {
     );
   }
 
-  //now try
-  const handleSuccess = async (response) => {
+  const handleSuccess = (response) => {
     console.log("Login Success=>:", response);
     const { credential } = response;
 
     // Decode the token to get user information
     const user = jwtDecode(credential);
-    // console.log("User:", user);
-
-    // Access token and user info
-    const token = credential;
-    const username = user.name;
-    const email = user.email;
-    const user_id = user.sub; // an id from google
-    //set creadentials
-    dispatch(
-      setUserCredentials({
-        user: username,
-        user_id: user_id,
-        token: token,
-      })
-    );
-
-    // Register the user in the backend
-    // await addUser({
-    //   full_name: username,
-    //   email: email,
-    //   password: "1234",
-    // }).unwrap();
-    toast.success("Successfully Login!");
-    navigate("/");
+    console.log("user google ", user);
+    setGoogleUser(user);
+    setOpenModal(true);
   };
 
   const handleFailure = () => {
     console.log("Login Failed");
     toast.error("Login Failed");
+  };
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  //here handle user login if the user is already exist
+  const handleRegisterAndLogin = async (values) => {
+    try {
+      const { password, confirmPassword } = values;
+
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match!");
+        return;
+      }
+
+      // Register the user in the backend
+      const userResponse = await addUser({
+        full_name: googleUser.name,
+        email: googleUser.email,
+        password,
+      }).unwrap();
+
+      if (userResponse) {
+        // If registration is successful, log in the user
+        const loginResponse = await login({
+          email: googleUser.email,
+          password,
+        }).unwrap();
+
+        if (loginResponse.token) {
+          dispatch(
+            setUserCredentials({
+              user_id: loginResponse.user_info.user_id,
+              user: loginResponse.user_info.full_name,
+              email: loginResponse.user_info.email,
+              token: loginResponse.token,
+            })
+          );
+          toast.success("Successfully logged in!");
+          navigate("/");
+        } else {
+          throw new Error("Login after registration failed");
+        }
+      } else {
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Error during registration or login", error);
+      toast.error(error.data.message || "Failed to register or login");
+    }
   };
 
   const initialValues = {
@@ -77,35 +123,27 @@ export const LoginPage = () => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      // eslint-disable-next-line no-unused-vars
-      const { rememberMe, ...dataSubmited } = values;
-      // Call the login mutation with form values
-      const res = await login(dataSubmited).unwrap(); // unwrap is used  to get the actual data or error
-      console.log("data submitted = ", res.token);
+      const { rememberMe, ...dataSubmitted } = values;
+      const res = await login(dataSubmitted).unwrap();
+
       if (res.token) {
-        console.log("enjoy man: ", res);
-        console.log("name: ", res.user_info.full_name);
         dispatch(
           setUserCredentials({
-            user: res.user_info.full_name,
             user_id: res.user_info.user_id,
+            user: res.user_info.full_name,
+            email: res.user_info.email,
             token: res.token,
           })
         );
-        console.log("Login successful", res);
+        toast.success("Successfully logged in!");
+        navigate("/");
       } else {
         throw new Error(res.message || "Login failed");
       }
-      // console.log("Login successful", result);
-      toast.success("Successfully Login!");
-      navigate("/");
-      // Handle post-login logic here, such as redirecting the user or storing login data
     } catch (error) {
-      console.error("Login failed", error);
-      toast.error("Login Failed use the correct crendentials!");
-      // Optionally handle errors, such as displaying a notification
+      toast.error("Login Failed: use the correct credentials!");
     }
-    setSubmitting(false); // Ensure submission flag is reset whether login succeeds or fails
+    setSubmitting(false);
   };
 
   return (
@@ -115,10 +153,8 @@ export const LoginPage = () => {
         style={{ backgroundImage: `url("/images/geez.webp")` }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        {/* Image fills this div */}
       </div>
 
-      {/* Form starts overlapping the image */}
       <div className="max-w-md md:w-[21rem] mx-auto mt-[-5rem] bg-white rounded-lg shadow-lg p-4 relative ">
         <div className="flex flex-col items-center justify-center bg-blue-500 p-4 text-center text-white rounded-lg min-h-40 shadow-xl mt-[-50px]">
           <h4 className="text-2xl font-bold pb-4">Sign In</h4>
@@ -183,8 +219,7 @@ export const LoginPage = () => {
                   name="rememberMe"
                   id="remember-me"
                   className="sr-only"
-                />{" "}
-                {/* Hidden checkbox */}
+                />
                 <label
                   htmlFor="remember-me"
                   className="relative flex items-center justify-center cursor-pointer block bg-gray-300 rounded-full w-9 h-4 transition duration-200 ease-in-out"
@@ -218,6 +253,82 @@ export const LoginPage = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>Enter Password</DialogTitle>
+        <DialogContent>
+          <Formik
+            initialValues={{ password: "", confirmPassword: "" }}
+            validationSchema={Yup.object({
+              password: Yup.string().required("Password is required"),
+              confirmPassword: Yup.string()
+                .oneOf([Yup.ref("password"), null], "Passwords must match")
+                .required("Confirm Password is required"),
+            })}
+            onSubmit={(values, { setSubmitting }) => {
+              handleRegisterAndLogin(values);
+              setSubmitting(false);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form className="flex flex-col gap-4">
+                <div className="relative h-11 w-full min-w-[200px]">
+                  <Field
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                  />
+                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                    Password
+                  </label>
+                  <IconButton
+                    className="absolute inset-y-0 right-0 flex items-center pr-2"
+                    onClick={handlePasswordVisibility}
+                  >
+                    {showPassword ? <BiHide /> : <BiShow />}
+                  </IconButton>
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-md italic"
+                  />
+                </div>
+                <div className="relative h-11 w-full min-w-[200px]">
+                  <Field
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
+                  />
+                  <label className="after:content[''] pointer-events-none absolute left-0  -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-blue-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-lg peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:after:scale-x-100 peer-focus:after:border-blue-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                    Confirm Password
+                  </label>
+                  <IconButton
+                    className="absolute inset-y-0 right-0 flex items-center pr-2"
+                    onClick={handleConfirmPasswordVisibility}
+                  >
+                    {showConfirmPassword ? <BiHide /> : <BiShow />}
+                  </IconButton>
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="text-red-500 text-md italic"
+                  />
+                </div>
+                <DialogActions>
+                  <Button onClick={() => setOpenModal(false)} color="primary">
+                    Cancel
+                  </Button>
+                  <Button type="submit" color="primary" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit"}
+                  </Button>
+                </DialogActions>
+              </Form>
+            )}
+          </Formik>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

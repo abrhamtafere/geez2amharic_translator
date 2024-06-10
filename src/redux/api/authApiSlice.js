@@ -68,14 +68,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Favorite"],
     }),
-    passwordChange: builder.mutation({
-      query: (data) => ({
-        url: `users/passwordchange`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["Favorite"],
-    }),
   }),
 });
 
@@ -87,5 +79,4 @@ export const {
   useUploadFileMutation,
   useSaveFavoriteMutation,
   useDeleteFavoriteMutation,
-  usePasswordChangeMutation,
 } = authApiSlice;
