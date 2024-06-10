@@ -155,13 +155,17 @@ function HomePage() {
             </div>
 
             <button
-              className=" md:hidden bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-4 rounded"
+              className={` md:hidden bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-4 rounded ${
+                loadingTranslate
+                  ? "bg-gray-500 hover:bg-gray-500"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
               onClick={handleTranslate}
             >
               Translate
             </button>
             <div className="flex flex-col gap-2">
-              <FaAngleDoubleRight className="hidden md:flex text-blue-700 size-6" />
+              <FaAngleDoubleRight className="hidden md:flex text-primary-dark size-6" />
               {user && (
                 <div className="">
                   {favoriteState ? (
@@ -188,7 +192,7 @@ function HomePage() {
               ></textarea>
             </div>
           </div>
-          <div className="flex items-center justify-center ">
+          <div className="flex dflex-col gap-2 lg:flex-row items-center justify-center ">
             <div className="flex items-center justify-center xmb-8 mx-4">
               <input
                 name="file"
@@ -221,10 +225,19 @@ function HomePage() {
             {/* favotites */}
             {user && (
               <button
-                className="hidden md:flex bg-green-500 hover:bg-green-700 text-white text-xl font-bold py-2 px-8 rounded sw-1/2 ml-4"
+                className="xhidden md:flex bg-green-500 hover:bg-green-700 text-white text-xl font-bold py-2 px-8 rounded flex items-center space-x-2 ml-4"
                 onClick={saveFavoriteTranslation}
               >
-                Save Favorite
+                {user && (
+                  <div className="flex items-center">
+                    {favoriteState ? (
+                      <FaHeart className="hidden md:flex text-green-700 size-6" />
+                    ) : (
+                      <FaRegHeart className="hidden md:flex text-red-700 size-6" />
+                    )}
+                  </div>
+                )}
+                <span>Save Favorite</span>
               </button>
             )}
           </div>

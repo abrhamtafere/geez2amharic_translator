@@ -29,7 +29,7 @@ export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [googleUser, setGoogleUser] = useState(null);
+  // const [googleUser, setGoogleUser] = useState(null);
 
   if (isLoading || isAddLoading) {
     return (
@@ -46,9 +46,9 @@ export const LoginPage = () => {
     // Decode the token to get user information
     const user = jwtDecode(credential);
     console.log("user google ", user);
-    setGoogleUser(user);
+    // setGoogleUser(user);
     // setOpenModal(true);
-    handleRegisterAndLogin();
+    handleRegisterAndLogin(user);
   };
 
   const handleFailure = () => {
@@ -65,7 +65,7 @@ export const LoginPage = () => {
   };
 
   //here handle user login if the user is already exist
-  const handleRegisterAndLogin = async () => {
+  const handleRegisterAndLogin = async (user) => {
     try {
       // const { password, confirmPassword } = values;
 
@@ -76,7 +76,7 @@ export const LoginPage = () => {
 
       // Register the user in the backend
       const userResponse = await googleLogin({
-        user: { name: googleUser.name, email: googleUser.email, photo: null },
+        user: { name: user.name, email: user.email, photo: null },
       }).unwrap();
 
       if (userResponse) {
@@ -106,7 +106,7 @@ export const LoginPage = () => {
       }
     } catch (error) {
       console.error("Error during registration or login", error);
-      toast.error(error.data.message || "Failed to register or login");
+      toast.error("Failed to register or login");
     }
   };
 
@@ -133,6 +133,7 @@ export const LoginPage = () => {
             user: res.user_info.full_name,
             email: res.user_info.email,
             token: res.token,
+            rememberMe,
           })
         );
         toast.success("Successfully logged in!");

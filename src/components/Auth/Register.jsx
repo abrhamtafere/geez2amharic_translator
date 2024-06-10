@@ -3,20 +3,25 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 
-import { useAddUserMutation } from "../../redux/api/userApiSlice";
+import {
+  useAddUserMutation,
+  useGoogleLoginMutation,
+} from "../../redux/api/userApiSlice";
 import { LinearProgress } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import { setUserCredentials } from "../../redux/slice/authSlice";
 import { useDispatch } from "react-redux";
+// import { useState } from "react";
 
 export const Register = () => {
   const navigate = useNavigate();
   const [addUser, { isLoading, isError }] = useAddUserMutation();
-
+  const [googleLogin, { isLoading: isAddLoading }] = useGoogleLoginMutation();
+  // const [googleUser, setGoogleUser] = useState(null);
   const dispatch = useDispatch();
 
-  if (isLoading) {
+  if (isLoading || isAddLoading) {
     return (
       <div>
         <LinearProgress />
@@ -35,32 +40,61 @@ export const Register = () => {
 
     // Decode the token to get user information
     const user = jwtDecode(credential);
-    console.log("User:", user);
-
-    // Access token and user info
-    const token = credential;
-    const username = user.name;
-    const email = user.email;
-
-    console.log("Token:", token);
-    console.log("Username:", username);
-    console.log("Email:", email);
-
-    //set creadentials
-    dispatch(
-      setUserCredentials({
-        user: username,
-        user_id: email,
-        token: token,
-      })
-    );
-    toast.success("Successfully Login!");
-    navigate("/");
+    console.log("user google ", user);
+    // setGoogleUser(user);
+    // setOpenModal(true);
+    handleRegisterAndLogin(user);
   };
 
   const handleFailure = () => {
     console.log("Login Failed");
     toast.error("Login Failed");
+  };
+
+  //here handle user login if the user is already exist
+  const handleRegisterAndLogin = async (user) => {
+    try {
+      // const { password, confirmPassword } = values;
+
+      // if (password !== confirmPassword) {
+      //   toast.error("Passwords do not match!");
+      //   return;
+      // }
+
+      // Register the user in the backend
+      const userResponse = await googleLogin({
+        user: { name: user.name, email: user.email, photo: null },
+      }).unwrap();
+
+      if (userResponse) {
+        // If registration is successful, log in the user
+
+        // const loginResponse = await login({
+        //   email: googleUser.email,
+        //   password,
+        // }).unwrap();
+
+        if (userResponse.token) {
+          dispatch(
+            setUserCredentials({
+              user_id: userResponse.useremail.user_id,
+              user: userResponse.useremail.full_name,
+              email: userResponse.useremail.email,
+              token: userResponse.token,
+            })
+          );
+          toast.success("Successfully logged in!");
+          navigate("/");
+        } else {
+          throw new Error("Login after registration failed");
+        }
+      } else {
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Error during registration or login", error);
+      toast.error("Failed to register or login");
+    }
   };
 
   const initialValues = {
@@ -206,7 +240,7 @@ export const Register = () => {
                   />
                 </div>
 
-                <div className="flex items-center mb-4 mt-4">
+                <div className="hidden flex items-center mb-4 mt-4">
                   <Field
                     type="checkbox"
                     name="agree"
