@@ -18,13 +18,13 @@ import {
 // for google auth
 import { jwtDecode } from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
-import { useAddUserMutation } from "../../redux/api/userApiSlice";
+import { useGoogleLoginMutation } from "../../redux/api/userApiSlice";
 import { BiShow, BiHide } from "react-icons/bi";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
-  const [addUser, { isLoading: isAddLoading }] = useAddUserMutation();
+  const [googleLogin, { isLoading: isAddLoading }] = useGoogleLoginMutation();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,7 +47,8 @@ export const LoginPage = () => {
     const user = jwtDecode(credential);
     console.log("user google ", user);
     setGoogleUser(user);
-    setOpenModal(true);
+    // setOpenModal(true);
+    handleRegisterAndLogin();
   };
 
   const handleFailure = () => {
@@ -64,36 +65,35 @@ export const LoginPage = () => {
   };
 
   //here handle user login if the user is already exist
-  const handleRegisterAndLogin = async (values) => {
+  const handleRegisterAndLogin = async () => {
     try {
-      const { password, confirmPassword } = values;
+      // const { password, confirmPassword } = values;
 
-      if (password !== confirmPassword) {
-        toast.error("Passwords do not match!");
-        return;
-      }
+      // if (password !== confirmPassword) {
+      //   toast.error("Passwords do not match!");
+      //   return;
+      // }
 
       // Register the user in the backend
-      const userResponse = await addUser({
-        full_name: googleUser.name,
-        email: googleUser.email,
-        password,
+      const userResponse = await googleLogin({
+        user: { name: googleUser.name, email: googleUser.email, photo: null },
       }).unwrap();
 
       if (userResponse) {
         // If registration is successful, log in the user
-        const loginResponse = await login({
-          email: googleUser.email,
-          password,
-        }).unwrap();
 
-        if (loginResponse.token) {
+        // const loginResponse = await login({
+        //   email: googleUser.email,
+        //   password,
+        // }).unwrap();
+
+        if (userResponse.token) {
           dispatch(
             setUserCredentials({
-              user_id: loginResponse.user_info.user_id,
-              user: loginResponse.user_info.full_name,
-              email: loginResponse.user_info.email,
-              token: loginResponse.token,
+              user_id: userResponse.useremail.user_id,
+              user: userResponse.useremail.full_name,
+              email: userResponse.useremail.email,
+              token: userResponse.token,
             })
           );
           toast.success("Successfully logged in!");

@@ -11,7 +11,7 @@ import { setShowSidebar } from "../../redux/slice/translationSlice";
 import { FiLogOut } from "react-icons/fi";
 import { BiUser } from "react-icons/bi";
 import { selectUser } from "../../redux/slice/authSlice";
-import { MdDashboard } from "react-icons/md";
+// import { MdDashboard } from "react-icons/md";
 import { MdFavorite } from "react-icons/md";
 // import { SiGnuprivacyguard} from 'react-icons/si'
 
@@ -71,7 +71,7 @@ const SideBar = () => {
       >
         <div className="flex bg-gray-800 text-white min-h-[84vh] xmd:h-[86vh] rounded-xl mb-16">
           <ul className="flex flex-col kjustify-center  py-4 w-full">
-            {user && (
+            {/* {user && (
               <li className={``}>
                 <Link
                   to="/dashboard"
@@ -85,7 +85,7 @@ const SideBar = () => {
                   Dashboard
                 </Link>
               </li>
-            )}
+            )} */}
             <li className={``}>
               <Link
                 to="/"
