@@ -41,7 +41,7 @@ export const Register = () => {
     const user = jwtDecode(credential);
     console.log("user google ", user);
     // setOpenModal(true);
-    if (user){
+    if (user) {
       handleRegisterAndLogin(user);
     }
   };
@@ -66,6 +66,7 @@ export const Register = () => {
               user: userResponse.useremail.full_name,
               email: userResponse.useremail.email,
               token: userResponse.token,
+              password: false,
             })
           );
           toast.success("Successfully logged in!");

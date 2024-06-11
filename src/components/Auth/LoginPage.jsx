@@ -92,7 +92,7 @@ export const LoginPage = () => {
             user: userResponse.useremail.full_name,
             email: userResponse.useremail.email,
             token: userResponse.token,
-            rememberMe: false,
+            password: false,
           })
         );
         console.log("output: ", userResponse);
@@ -122,7 +122,7 @@ export const LoginPage = () => {
     try {
       const { rememberMe, ...dataSubmitted } = values;
       const res = await login(dataSubmitted).unwrap();
-      console.log("check token: res = ", res);
+      console.log("check token: res = ", res, rememberMe);
       console.log("check token: res = ", res.token);
       if (res.token) {
         dispatch(
@@ -131,7 +131,7 @@ export const LoginPage = () => {
             user: res.user_info.full_name,
             email: res.user_info.email,
             token: res.token,
-            rememberMe,
+            password: true,
           })
         );
         toast.success("Successfully logged in!");

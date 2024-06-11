@@ -18,7 +18,7 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { useGetFavoritesQuery } from "../../redux/api/authApiSlice";
 
 function Profile() {
-  const { user, email, user_id } = useSelector((state) => state.auth);
+  const { user, email, user_id, password } = useSelector((state) => state.auth);
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
   const [passwordChange, { isLoading: isChangingPassword }] =
     usePasswordChangeMutation();
@@ -137,7 +137,7 @@ function Profile() {
             onChange={handleInputChange}
             className="input  input input-bordered p-1 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500 w-full rounded"
           />
-
+{password && (
           <div className="relative">
             <label htmlFor="" className="text-sm italic text-gray-600">
               you can change your password
@@ -158,6 +158,8 @@ function Profile() {
               {showOldPassword ? <BiHide /> : <BiShow />}
             </div>
           </div>
+)}
+          {password && (
           <div className="relative">
             <input
               type={showNewPassword ? "text" : "password"}
@@ -174,14 +176,15 @@ function Profile() {
               {showNewPassword ? <BiHide /> : <BiShow />}
             </div>
           </div>
+          )}
         </div>
         <div className="flex justify-between items-center mt-6">
           <button
             className={`btn btn-primary text-white bg-blue-500 hover:bg-blue-600 p-2 rounded ${
-              isChangingPassword ? "opacity-50 cursor-not-allowed" : ""
+              isChangingPassword | !password ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={handleSaveChanges}
-            disabled={isChangingPassword}
+            disabled={isChangingPassword | !password}
           >
             {isChangingPassword ? "Changing Password..." : "Save Changes"}
           </button>

@@ -50,7 +50,7 @@ function HomePage() {
         },
         body: JSON.stringify({ paragraph: paragraph }),
       });
-
+      console.log("res: ", response);
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
       }
@@ -59,7 +59,7 @@ function HomePage() {
       return data.translation; // Adjusted based on Postman response
     } catch (error) {
       console.error("Error:", error);
-      return "Translation failed";
+      return <p className="text-gray-600">Translation failed</p>;
     }
     // finally {
     //   // setLoadingTranslate(false);
