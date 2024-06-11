@@ -45,7 +45,10 @@ const Home = () => {
                   onClick={handleProfile}
                 >
                   <FaUserCog className="text-gray-700" />
-                  <span> Welcome <span className=''>{user}</span></span>
+                  <span>
+                    {" "}
+                    Welcome <span className="">{user}</span>
+                  </span>
                 </button>
                 <button
                   className="flex items-center justify-center gap-2 bg-white text-light-blue-500 p-2 px-4 rounded hover:shadow-2xl hover:text-light-blue-700 font-semibold "
@@ -76,17 +79,15 @@ const Home = () => {
             </div>
           )}
           <div
-  className="relative flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md mb-8"
-  style={{ backgroundImage: `url("/images/geez.webp")` }}
->
-  <div className="absolute inset-0 bg-black opacity-50"></div>
-  <div className="relative z-10">
-    Geez to Amharic Translator
-  </div>
-</div>
+            className="relative flex items-center justify-center text-2xl font-bold text-white sm:text-xl lg:text-4xl h-44 p-8 bg-cover bg-center rounded-md overflow-hidden text-center shadow-md mb-8"
+            style={{ backgroundImage: `url("/images/geez.webp")` }}
+          >
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="relative z-10">Geez to Amharic Translator</div>
+          </div>
         </div>
         <HomePage />
-        <UnregisteredUserMessage />
+        {!user && <UnregisteredUserMessage />}
         <AboutUs />
       </div>
     </div>
