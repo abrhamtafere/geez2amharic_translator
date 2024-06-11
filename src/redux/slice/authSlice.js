@@ -26,16 +26,16 @@ const authSlice = createSlice({
       state.email = email;
       state.token = token;
 
-      if (rememberMe) {
+      if (rememberMe | 1 ) {
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("userInfo", JSON.stringify(user, null, 2));
         localStorage.setItem("email", JSON.stringify(email, null, 2));
         localStorage.setItem("token", token);
       } else {
-        sessionStorage.setItem("user_id", user_id);
-        sessionStorage.setItem("userInfo", JSON.stringify(user, null, 2));
-        sessionStorage.setItem("email", JSON.stringify(email, null, 2));
-        sessionStorage.setItem("token", token);
+        // sessionStorage.setItem("user_id", user_id);
+        // sessionStorage.setItem("userInfo", JSON.stringify(user, null, 2));
+        // sessionStorage.setItem("email", JSON.stringify(email, null, 2));
+        // sessionStorage.setItem("token", token);
       }
     },
     logout: (state) => {
@@ -45,11 +45,11 @@ const authSlice = createSlice({
       localStorage.removeItem("userInfo");
       localStorage.removeItem("email");
       localStorage.removeItem("token");
-      //
-      sessionStorage.removeItem("user_id");
-      sessionStorage.removeItem("userInfo");
-      sessionStorage.removeItem("email");
-      sessionStorage.removeItem("token");
+      // //
+      // sessionStorage.removeItem("user_id");
+      // sessionStorage.removeItem("userInfo");
+      // sessionStorage.removeItem("email");
+      // sessionStorage.removeItem("token");
     },
   },
 });

@@ -67,40 +67,37 @@ export const LoginPage = () => {
   //here handle user login if the user is already exist
   const handleRegisterAndLogin = async (user) => {
     try {
-      // const { password, confirmPassword } = values;
-
-      // if (password !== confirmPassword) {
-      //   toast.error("Passwords do not match!");
-      //   return;
-      // }
-
       // Register the user in the backend
       const userResponse = await googleLogin({
         user: { name: user.name, email: user.email, photo: null },
       }).unwrap();
 
-      if (userResponse) {
-        // If registration is successful, log in the user
+      // Retry mechanism to wait for userResponse.user
+      const maxRetries = 5;
+      const retryDelay = 1000; // 1 second
+      let retries = 0;
 
-        // const loginResponse = await login({
-        //   email: googleUser.email,
-        //   password,
-        // }).unwrap();
-
-        if (userResponse.token) {
-          dispatch(
-            setUserCredentials({
-              user_id: userResponse.useremail.user_id,
-              user: userResponse.useremail.full_name,
-              email: userResponse.useremail.email,
-              token: userResponse.token,
-            })
-          );
-          toast.success("Successfully logged in!");
-          navigate("/");
-        } else {
-          throw new Error("Login after registration failed");
-        }
+      while (!userResponse.useremail && retries < maxRetries) {
+        console.log(
+          `Retrying to fetch user data (${retries + 1}/${maxRetries})...`
+        );
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        retries += 1;
+      }
+ 
+      if (userResponse.useremail) {
+        dispatch(
+          setUserCredentials({
+            user_id: userResponse.useremail.user_id,
+            user: userResponse.useremail.full_name,
+            email: userResponse.useremail.email,
+            token: userResponse.token,
+            rememberMe: false,
+          })
+        );
+        console.log("output: ", userResponse);
+        toast.success("Successfully logged in!");
+        navigate("/");
       } else {
         throw new Error("Registration failed");
       }
@@ -125,7 +122,8 @@ export const LoginPage = () => {
     try {
       const { rememberMe, ...dataSubmitted } = values;
       const res = await login(dataSubmitted).unwrap();
-
+      console.log("check token: res = ", res);
+      console.log("check token: res = ", res.token);
       if (res.token) {
         dispatch(
           setUserCredentials({
@@ -214,7 +212,7 @@ export const LoginPage = () => {
                 />
               </div>
 
-              <div className="flex items-center mb-4 mt-4">
+              <div className="flex items-center mb-4 mt-4 hidden ">
                 <Field
                   type="checkbox"
                   name="rememberMe"

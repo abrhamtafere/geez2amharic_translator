@@ -9,7 +9,7 @@ const UnregisteredUserMessage = () => {
     navigate("/login");
   };
   return (
-    <div className="flex justify-center items-center bg-gray-100 dark:bg-gray-900 mb-8">
+    <div className="flex justify-center items-center bg-gray-100 dark:bg-gray-900 mb-8 mt-2">
       <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-md text-center">
         <div className="flex items-center justify-center mb-4">
           <FaInfoCircle className="text-blue-500 dark:text-blue-300 text-2xl mr-2" />

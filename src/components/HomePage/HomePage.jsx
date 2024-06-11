@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import {
+  useGetFavoritesQuery,
   useSaveFavoriteMutation,
   useUploadFileMutation,
 } from "../../redux/api/authApiSlice";
@@ -20,28 +21,23 @@ function HomePage() {
   const [uploadFile, { isLoading, isError }] = useUploadFileMutation();
   const [saveFavorite, { isFavoriteLoading, isFavoriteError }] =
     useSaveFavoriteMutation();
+  const { data: existingTranslations = [], isLoading: isGetFavoritesLoading } =
+    useGetFavoritesQuery(user_id);
   console.log("user id: ", user_id);
-  if (isLoading) {
+
+  if (isLoading || isGetFavoritesLoading || isFavoriteLoading) {
     return (
       <div>
-        <span className="pl-4 text-center w-full p-2">
-          File is uploading...{" "}
-        </span>
+        <span className="pl-4 text-center w-full p-2">Loading...</span>
         <LinearProgress />
       </div>
     );
   }
 
-  if (isFavoriteLoading) {
-    return <div className="">saving...</div>;
-  }
-
-  if (isFavoriteError) {
-    return <div className="">saving Error</div>;
-  }
-
-  if (isError) {
-    return <div>Error uploading file</div>;
+  if (isError || isFavoriteError) {
+    return (
+      <div>Error: {isError ? "Uploading file" : "Saving translation"}</div>
+    );
   }
 
   const translateSentence = async (paragraph) => {
@@ -76,6 +72,7 @@ function HomePage() {
       const translation = await translateSentence(geezText);
       setTranslatedText(translation);
       // setTranslatedText("Translated version of: " + geezText);
+      setFavoriteState(false); // to refresh the save
     } else {
       setTranslatedText("please first enter the geez text");
     }
@@ -90,6 +87,11 @@ function HomePage() {
     if (file) {
       console.log("file is: ", file);
 
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload a valid image file");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("file", file);
 
@@ -103,10 +105,11 @@ function HomePage() {
         // Extract processed text from the response and set it as geezText
         const processedText = response.processed_text.join("\n");
         setGeezText(processedText);
-        setFavoriteState(false);
+        // toast.success("File uploaded and processed successfully!");
       } catch (error) {
         // Handle error
         console.error("Error:", error);
+        toast.error("Error uploading file. Please try again.");
       }
     }
   };
@@ -117,6 +120,25 @@ function HomePage() {
       geez: geezText, //"Geez text here",
       amharic: translatedText, //"Amharic text here",
     };
+
+    // Check if the translation already exists for the user getFavorites retrieves the user's favorite translations
+    const isDuplicate = existingTranslations.some((translation) => {
+      return (
+        translation.geez === data.geez && translation.amharic === data.amharic
+      );
+    });
+
+    if (isDuplicate) {
+      // Translation already exists, notify user
+      toast.info("Translation already saved");
+      return;
+    }
+
+    if (favoriteState) {
+      toast.info("There is no new Translated text!");
+      return;
+    }
+
     try {
       const res = await saveFavorite(data).unwrap();
       if (res) {
@@ -128,7 +150,7 @@ function HomePage() {
       }
     } catch (error) {
       console.error("Error saving translation:", error);
-      toast.error("Error saving translation");
+      toast.error("Error saving translation ");
     }
   };
 
@@ -148,7 +170,7 @@ function HomePage() {
                 value={geezText}
                 onChange={(e) => {
                   setGeezText(e.target.value);
-                  setFavoriteState(false);
+                  // setFavoriteState(false);
                 }}
                 rows="6"
               ></textarea>
@@ -169,7 +191,7 @@ function HomePage() {
               {user && (
                 <div className="">
                   {favoriteState ? (
-                    <FaHeart className="hidden md:flex text-green-700 size-6" />
+                    <FaHeart className="hidden md:flex text-green-500 size-6" />
                   ) : (
                     <FaRegHeart className="hidden md:flex text-red-700 size-6" />
                   )}
@@ -231,9 +253,9 @@ function HomePage() {
                 {user && (
                   <div className="flex items-center">
                     {favoriteState ? (
-                      <FaHeart className="hidden md:flex text-green-700 size-6" />
+                      <FaHeart className="hidden md:flex text-green-600 size-5" />
                     ) : (
-                      <FaRegHeart className="hidden md:flex text-red-700 size-6" />
+                      <FaRegHeart className="hidden md:flex text-red-700 size-5" />
                     )}
                   </div>
                 )}

@@ -18,7 +18,6 @@ export const Register = () => {
   const navigate = useNavigate();
   const [addUser, { isLoading, isError }] = useAddUserMutation();
   const [googleLogin, { isLoading: isAddLoading }] = useGoogleLoginMutation();
-  // const [googleUser, setGoogleUser] = useState(null);
   const dispatch = useDispatch();
 
   if (isLoading || isAddLoading) {
@@ -41,39 +40,25 @@ export const Register = () => {
     // Decode the token to get user information
     const user = jwtDecode(credential);
     console.log("user google ", user);
-    // setGoogleUser(user);
     // setOpenModal(true);
-    handleRegisterAndLogin(user);
+    if (user){
+      handleRegisterAndLogin(user);
+    }
   };
 
   const handleFailure = () => {
-    console.log("Login Failed");
     toast.error("Login Failed");
   };
 
   //here handle user login if the user is already exist
   const handleRegisterAndLogin = async (user) => {
     try {
-      // const { password, confirmPassword } = values;
-
-      // if (password !== confirmPassword) {
-      //   toast.error("Passwords do not match!");
-      //   return;
-      // }
-
       // Register the user in the backend
       const userResponse = await googleLogin({
         user: { name: user.name, email: user.email, photo: null },
       }).unwrap();
 
       if (userResponse) {
-        // If registration is successful, log in the user
-
-        // const loginResponse = await login({
-        //   email: googleUser.email,
-        //   password,
-        // }).unwrap();
-
         if (userResponse.token) {
           dispatch(
             setUserCredentials({
@@ -128,7 +113,6 @@ export const Register = () => {
       navigate("/login");
       resetForm();
     } catch (error) {
-      console.error("Registration failed:", error);
       toast.error("Registration failed: " + error.message);
       setErrors({ api: "Registration failed. Please try again later." });
     }

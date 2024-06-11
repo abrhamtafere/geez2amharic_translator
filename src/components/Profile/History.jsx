@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const History = () => {
   // Simulated user ID of the currently logged-in user
   const { user_id: id } = useSelector((state) => state.auth);
-  const { data: favorites, isLoading } = useGetFavoritesQuery(id);
+  const { data: favorites = [], isLoading } = useGetFavoritesQuery(id); // Default to an empty array
   const [deleteFavorite, { isDeleteLoading }] = useDeleteFavoriteMutation();
 
   if (isLoading) {
@@ -22,9 +22,9 @@ const History = () => {
   }
   console.log("favo: ", favorites);
 
-  const handleDelete = async ({user_id, text_id}) => {
+  const handleDelete = async ({ user_id, text_id }) => {
     try {
-      console.log('tibsua: ', user_id,' and ', text_id)
+      console.log("tibsua: ", user_id, " and ", text_id);
       const res = await deleteFavorite({
         user_id,
         text_id,

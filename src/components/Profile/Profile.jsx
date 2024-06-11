@@ -53,7 +53,7 @@ function Profile() {
   const handleDeleteUser = async () => {
     try {
       if (favorites.length !== 0) {
-        toast.error("First clear all your favorites");
+        toast.info("First clear all your favorites");
         handleCloseModal();
         return;
       }
