@@ -43,7 +43,7 @@ function HomePage() {
   const translateSentence = async (paragraph) => {
     try {
       setLoadingTranslate(true);
-      const response = await fetch("https://geeztoamharic-8cx7.onrender.com/api/translate", {
+      const response = await fetch("https://geeztoamharic.loca.lt/translate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
